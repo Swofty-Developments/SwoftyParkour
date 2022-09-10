@@ -1,0 +1,10 @@
+net.swofty.seniorteamapplication.api
+net.swofty.seniorteamapplication.api.listeners
+net.swofty.seniorteamapplication.plugin
+net.swofty.seniorteamapplication.plugin.gui
+net.swofty.seniorteamapplication.plugin.gui.events
+net.swofty.seniorteamapplication.plugin.gui.guiitem
+net.swofty.seniorteamapplication.plugin.gui.guis
+net.swofty.seniorteamapplication.plugin.listener
+net.swofty.seniorteamapplication.plugin.listener.listeners
+net.swofty.seniorteamapplication.plugin.utilities

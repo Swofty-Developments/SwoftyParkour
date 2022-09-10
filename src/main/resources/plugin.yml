@@ -1,0 +1,6 @@
+name: SeniorTeamApplication
+version: '${project.version}'
+main: net.swofty.seniorteamapplication.plugin.SeniorTeamApplication
+api-version: 1.19
+description: "A 1.19.2 configurable plugin intended for my application for Senior Team"
+author: "Swofty"
