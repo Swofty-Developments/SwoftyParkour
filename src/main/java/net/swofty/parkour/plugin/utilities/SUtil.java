@@ -2,6 +2,7 @@ package net.swofty.parkour.plugin.utilities;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.swofty.parkour.plugin.SwoftyParkour;
+import net.swofty.parkour.plugin.data.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,6 +19,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SUtil {
+
+    public static HashMap<String, net.md_5.bungee.api.ChatColor> cachedHexColors = new HashMap<>();
+
+    public static void setCachedHexColors() {
+        Config config = SwoftyParkour.getPlugin().getMessages();
+
+        config.getConfigurationSection("hex-colors").getKeys(true).forEach(key -> {
+            cachedHexColors.put("$" + key, net.md_5.bungee.api.ChatColor.of(config.getConfigurationSection("hex-colors").getString(key)));
+        });
+    }
+
     public static ItemStack getSkull(String playerName, ItemStack stack) {
         Location loc = new Location(Bukkit.getServer().getWorlds().get(0), 1000, 200, 1000);
 
@@ -186,11 +198,25 @@ public class SUtil {
     }
 
     private static String color(String string) {
-        return ChatColor.translateAlternateColorCodes('&', string);
+        String toReturn = ChatColor.translateAlternateColorCodes('&', string);
+        for (Map.Entry<String, net.md_5.bungee.api.ChatColor> entry : cachedHexColors.entrySet()) {
+            String key = entry.getKey();
+            net.md_5.bungee.api.ChatColor value = entry.getValue();
+            toReturn = toReturn.replace(key, value.toString());
+        }
+        return toReturn;
     }
 
     private static List<String> color(List<String> string) {
-        string.replaceAll(str -> str.replace("&", "§"));
+        string.replaceAll(str -> {
+            str = str.replace("&", "§");
+            for (Map.Entry<String, net.md_5.bungee.api.ChatColor> entry : cachedHexColors.entrySet()) {
+                String key = entry.getKey();
+                net.md_5.bungee.api.ChatColor value = entry.getValue();
+                str = str.replaceAll(key, value.toString());
+            }
+            return str;
+        });
         return string;
     }
 }

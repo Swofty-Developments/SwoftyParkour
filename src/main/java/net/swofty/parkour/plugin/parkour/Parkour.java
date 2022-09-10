@@ -23,6 +23,9 @@ public class Parkour {
     @Getter
     @Setter
     public Boolean finished;
+    @Getter
+    @Setter
+    public Location top;
 
     Parkour() {}
 }

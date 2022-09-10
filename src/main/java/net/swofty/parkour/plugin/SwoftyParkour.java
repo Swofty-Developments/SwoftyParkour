@@ -9,6 +9,7 @@ import net.swofty.parkour.plugin.holograms.HologramManager;
 import net.swofty.parkour.plugin.listener.PListener;
 import net.swofty.parkour.plugin.parkour.ParkourRegistry;
 import net.swofty.parkour.plugin.sql.SQLDatabase;
+import net.swofty.parkour.plugin.utilities.SUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -63,6 +64,7 @@ public final class SwoftyParkour extends JavaPlugin {
         messages = new Config("messages.yml");
         config = new Config("config.yml");
         parkours = new Config("parkours.yml");
+        SUtil.setCachedHexColors();
 
         // Handle SQL
         sql = new SQLDatabase();

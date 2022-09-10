@@ -27,6 +27,7 @@ public class ParkourRegistry {
             parkour.setName(section.getString("name"));
             parkour.setStartLocation((Location) section.get("start"));
             parkour.setEndLocation((Location) section.get("end"));
+            parkour.setTop((Location) section.get("top"));
             List<Location> checkpoints = new ArrayList<>();
             section.getConfigurationSection("checkpoints").getKeys(true).stream().sorted().forEach(s -> {
                 checkpoints.add((Location) section.getConfigurationSection("checkpoints").getConfigurationSection(s).get("location"));
@@ -53,6 +54,7 @@ public class ParkourRegistry {
         section.set("name", parkour.getName());
         section.set("start", parkour.getStartLocation());
         section.set("end", parkour.getEndLocation());
+        section.set("top", parkour.getTop());
         section.set("checkpoints", "");
         section.createSection("checkpoints");
         int x = 0;

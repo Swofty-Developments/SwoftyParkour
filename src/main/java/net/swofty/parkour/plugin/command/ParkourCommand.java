@@ -61,7 +61,7 @@ public abstract class ParkourCommand implements CommandExecutor, TabCompleter {
 
         @Override
         public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-            if (this.parkourCommand == null) {
+            if (args.length == 0 || this.parkourCommand == null) {
                 SwoftyParkour.getPlugin().messages.getStringList("messages.command.usage").forEach(s -> {
                     sender.sendMessage(SUtil.translateColorWords(s));
                 });
@@ -81,7 +81,7 @@ public abstract class ParkourCommand implements CommandExecutor, TabCompleter {
                     cooldowns = CMD_COOLDOWN.get(((Player) sender).getUniqueId());
                     if (cooldowns.containsKey(parkourCommand)) {
                         if (System.currentTimeMillis() - cooldowns.get(parkourCommand) < ((CommandCooldown) parkourCommand).getCooldown()) {
-                            sender.sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.cooldown").replace("$SECONDS", String.valueOf((System.currentTimeMillis() - cooldowns.get(parkourCommand)) / 1000))));
+                            sender.sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.cooldown").replace("$SECONDS", String.valueOf((double) (System.currentTimeMillis() - cooldowns.get(parkourCommand)) / 1000))));
                             return false;
                         }
                     }

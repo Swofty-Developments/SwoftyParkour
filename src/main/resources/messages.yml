@@ -5,6 +5,16 @@
 #     Messages Config
 #
 
+#
+#  To use hex colors inside of messages, merely add the variable name and its
+#  hex color value here. After you have done this you can use the variable
+#  inside any of the messages
+#
+#  So to use this example hex color, you should use the $HEXCOLOREXAMPLE variable
+#
+hex-colors:
+  HEXCOLOREXAMPLE: "#3CEC5D"
+
 messages:
   command:
     no-permission: "%%red%%You do not have permission for this command!"
