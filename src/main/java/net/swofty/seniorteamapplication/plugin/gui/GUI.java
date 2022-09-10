@@ -1,11 +1,11 @@
-package net.swofty.seniorteamapplication.plugin.gui;
+package net.swofty.parkour.plugin.gui;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.swofty.seniorteamapplication.plugin.SwoftyParkour;
-import net.swofty.seniorteamapplication.plugin.gui.events.GUIOpenEvent;
-import net.swofty.seniorteamapplication.plugin.gui.guiitem.GUIItem;
-import net.swofty.seniorteamapplication.plugin.utilities.SUtil;
+import net.swofty.parkour.plugin.SwoftyParkour;
+import net.swofty.parkour.plugin.gui.events.GUIOpenEvent;
+import net.swofty.parkour.plugin.gui.guiitem.GUIItem;
+import net.swofty.parkour.plugin.utilities.SUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

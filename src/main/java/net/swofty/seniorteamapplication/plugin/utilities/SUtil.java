@@ -1,6 +1,6 @@
-package net.swofty.seniorteamapplication.plugin.utilities;
+package net.swofty.parkour.plugin.utilities;
 
-import net.swofty.seniorteamapplication.plugin.SwoftyParkour;
+import net.swofty.parkour.plugin.SwoftyParkour;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

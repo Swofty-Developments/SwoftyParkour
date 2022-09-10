@@ -1,4 +1,4 @@
-package net.swofty.seniorteamapplication.api.listeners;
+package net.swofty.parkour.api.listeners;
 
 public class ParkourEvent {
 }

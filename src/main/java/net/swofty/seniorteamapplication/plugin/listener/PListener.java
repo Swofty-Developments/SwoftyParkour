@@ -1,6 +1,6 @@
-package net.swofty.seniorteamapplication.plugin.listener;
+package net.swofty.parkour.plugin.listener;
 
-import net.swofty.seniorteamapplication.plugin.SwoftyParkour;
+import net.swofty.parkour.plugin.SwoftyParkour;
 import org.bukkit.event.Listener;
 
 public class PListener implements Listener {

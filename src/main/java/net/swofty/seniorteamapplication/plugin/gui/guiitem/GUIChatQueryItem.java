@@ -1,6 +1,6 @@
-package net.swofty.seniorteamapplication.plugin.gui.guiitem;
+package net.swofty.parkour.plugin.gui.guiitem;
 
-import net.swofty.seniorteamapplication.plugin.gui.GUI;
+import net.swofty.parkour.plugin.gui.GUI;
 
 public interface GUIChatQueryItem extends GUIClickableItem {
     GUI onQueryFinish(String query);

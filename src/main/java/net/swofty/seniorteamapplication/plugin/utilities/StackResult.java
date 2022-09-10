@@ -1,4 +1,4 @@
-package net.swofty.seniorteamapplication.plugin.utilities;
+package net.swofty.parkour.plugin.utilities;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

@@ -1,7 +1,7 @@
-package net.swofty.seniorteamapplication.plugin.utilities;
+package net.swofty.parkour.plugin.utilities;
 
 import lombok.Getter;
-import net.swofty.seniorteamapplication.plugin.listener.listeners.GUIListener;
+import net.swofty.parkour.plugin.listener.listeners.GUIListener;
 import org.bukkit.entity.Player;
 
 import java.util.function.Consumer;

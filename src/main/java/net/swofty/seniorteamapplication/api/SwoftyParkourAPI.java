@@ -1,6 +1,6 @@
-package net.swofty.seniorteamapplication.api;
+package net.swofty.parkour.api;
 
-import net.swofty.seniorteamapplication.api.listeners.ListenerRegistry;
+import net.swofty.parkour.api.listeners.ListenerRegistry;
 
 public class SwoftyParkourAPI {
 

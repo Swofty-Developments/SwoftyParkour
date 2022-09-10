@@ -1,13 +1,13 @@
-package net.swofty.seniorteamapplication.plugin.listener.listeners;
+package net.swofty.parkour.plugin.listener.listeners;
 
 import lombok.SneakyThrows;
-import net.swofty.seniorteamapplication.plugin.gui.GUI;
-import net.swofty.seniorteamapplication.plugin.gui.events.GUIOpenEvent;
-import net.swofty.seniorteamapplication.plugin.gui.guiitem.GUIChatQueryItem;
-import net.swofty.seniorteamapplication.plugin.gui.guiitem.GUIClickableItem;
-import net.swofty.seniorteamapplication.plugin.gui.guiitem.GUIItem;
-import net.swofty.seniorteamapplication.plugin.listener.PListener;
-import net.swofty.seniorteamapplication.plugin.utilities.ChatQuery;
+import net.swofty.parkour.plugin.gui.GUI;
+import net.swofty.parkour.plugin.gui.events.GUIOpenEvent;
+import net.swofty.parkour.plugin.gui.guiitem.GUIChatQueryItem;
+import net.swofty.parkour.plugin.gui.guiitem.GUIClickableItem;
+import net.swofty.parkour.plugin.gui.guiitem.GUIItem;
+import net.swofty.parkour.plugin.listener.PListener;
+import net.swofty.parkour.plugin.utilities.ChatQuery;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

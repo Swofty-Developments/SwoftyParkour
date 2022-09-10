@@ -1,7 +1,7 @@
-package net.swofty.seniorteamapplication.plugin;
+package net.swofty.parkour.plugin;
 
 import lombok.Getter;
-import net.swofty.seniorteamapplication.plugin.listener.PListener;
+import net.swofty.parkour.plugin.listener.PListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 

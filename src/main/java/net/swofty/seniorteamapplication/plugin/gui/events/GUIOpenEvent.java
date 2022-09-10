@@ -1,8 +1,8 @@
-package net.swofty.seniorteamapplication.plugin.gui.events;
+package net.swofty.parkour.plugin.gui.events;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.swofty.seniorteamapplication.plugin.gui.GUI;
+import net.swofty.parkour.plugin.gui.GUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;

@@ -1,6 +1,6 @@
-package net.swofty.seniorteamapplication.plugin.gui.guis;
+package net.swofty.parkour.plugin.gui.guis;
 
-import net.swofty.seniorteamapplication.plugin.gui.GUI;
+import net.swofty.parkour.plugin.gui.GUI;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class LeaderboardGUI extends GUI {
