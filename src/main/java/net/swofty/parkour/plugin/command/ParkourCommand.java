@@ -15,7 +15,7 @@ import java.util.*;
 
 public abstract class ParkourCommand implements CommandExecutor, TabCompleter {
     private static final Map<UUID, HashMap<ParkourCommand, Long>> CMD_COOLDOWN = new HashMap<>();
-    public static final String COMMAND_SUFFIX = "Command";
+    public static final String COMMAND_SUFFIX = "subCommand_";
 
     private final CommandParameters params;
     private final String name;
@@ -61,52 +61,55 @@ public abstract class ParkourCommand implements CommandExecutor, TabCompleter {
 
         @Override
         public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-            if (args.length == 0) {
-                SwoftyParkour.getPlugin().messages.getStringList("messages.usage").forEach(s -> {
+            if (this.parkourCommand == null) {
+                SwoftyParkour.getPlugin().messages.getStringList("messages.command.usage").forEach(s -> {
                     sender.sendMessage(SUtil.translateColorWords(s));
                 });
                 return false;
             }
 
-            CommandLoader.commands.forEach(parkourCommand1 -> {
-                if (parkourCommand1.name.equals(args[0]) || parkourCommand1.aliases.contains(args[0])) {
-                    this.parkourCommand = parkourCommand1;
-                    parkourCommand.sender = new CommandSource(sender);
+            parkourCommand.sender = new CommandSource(sender);
 
-                    if (!sender.hasPermission(parkourCommand.permission)) {
-                        sender.sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.no-permission")));
-                        return;
-                    }
+            if (!sender.hasPermission(parkourCommand.permission)) {
+                sender.sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.no-permission")));
+                return false;
+            }
 
-                    if (parkourCommand instanceof CommandCooldown) {
-                        HashMap<ParkourCommand, Long> cooldowns = new HashMap<>();
-                        if (CMD_COOLDOWN.containsKey(((Player) sender).getUniqueId())) {
-                            cooldowns = CMD_COOLDOWN.get(((Player) sender).getUniqueId());
-                            if (cooldowns.containsKey(parkourCommand)) {
-                                if (System.currentTimeMillis() - cooldowns.get(parkourCommand) < ((CommandCooldown) parkourCommand).getCooldown()) {
-                                    sender.sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.cooldown").replace("$SECONDS", String.valueOf((System.currentTimeMillis() - cooldowns.get(parkourCommand)) / 1000))));
-                                    return;
-                                }
-                            }
+            if (parkourCommand instanceof CommandCooldown) {
+                HashMap<ParkourCommand, Long> cooldowns = new HashMap<>();
+                if (CMD_COOLDOWN.containsKey(((Player) sender).getUniqueId())) {
+                    cooldowns = CMD_COOLDOWN.get(((Player) sender).getUniqueId());
+                    if (cooldowns.containsKey(parkourCommand)) {
+                        if (System.currentTimeMillis() - cooldowns.get(parkourCommand) < ((CommandCooldown) parkourCommand).getCooldown()) {
+                            sender.sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.cooldown").replace("$SECONDS", String.valueOf((System.currentTimeMillis() - cooldowns.get(parkourCommand)) / 1000))));
+                            return false;
                         }
-                        cooldowns.put(parkourCommand, System.currentTimeMillis() + ((CommandCooldown) parkourCommand).getCooldown());
-                        CMD_COOLDOWN.put(((Player) sender).getUniqueId(), cooldowns);
                     }
-
-                    parkourCommand.run(parkourCommand.sender, args);
                 }
-            });
+                cooldowns.put(parkourCommand, System.currentTimeMillis() + ((CommandCooldown) parkourCommand).getCooldown());
+                CMD_COOLDOWN.put(((Player) sender).getUniqueId(), cooldowns);
+            }
+
+            parkourCommand.run(parkourCommand.sender, args);
             return false;
         }
 
         @Override
         public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-            if (args.length == 0) {
+            if (args.length <= 1) {
                 List<String> list = new ArrayList<>();
                 CommandLoader.commands.stream().forEach(entry -> list.add(entry.name));
                 return list;
             } else {
-                return parkourCommand.tabCompleters(sender, alias, args);
+                for (ParkourCommand parkourCommand1 : CommandLoader.commands) {
+                    if (parkourCommand1.name.equals(args[0]) || parkourCommand1.aliases.contains(args[0])) {
+                        this.parkourCommand = parkourCommand1;
+                        return parkourCommand.tabCompleters(sender, alias, args);
+                    }
+                }
+
+                this.parkourCommand = null;
+                return new ArrayList<>();
             }
         }
     }

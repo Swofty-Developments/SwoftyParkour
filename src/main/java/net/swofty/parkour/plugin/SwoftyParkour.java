@@ -49,7 +49,7 @@ public final class SwoftyParkour extends JavaPlugin {
     }
 
     private void loadListeners() {
-        Reflections reflection = new Reflections("net.swofty.seniorteamapplication.plugin.listener.listeners");
+        Reflections reflection = new Reflections("net.swofty.parkour.plugin.listener.listeners");
         for(Class<? extends PListener> l:reflection.getSubTypesOf(PListener.class)) {
             try {
                 l.newInstance();
@@ -62,7 +62,7 @@ public final class SwoftyParkour extends JavaPlugin {
     private void loadCommands() {
         ParkourCommand.register();
 
-        Reflections reflection = new Reflections("net.swofty.lobby.command.commands");
+        Reflections reflection = new Reflections("net.swofty.parkour.plugin.command.subtypes");
         for(Class<? extends ParkourCommand> l:reflection.getSubTypesOf(ParkourCommand.class)) {
             try {
                 ParkourCommand command = l.newInstance();

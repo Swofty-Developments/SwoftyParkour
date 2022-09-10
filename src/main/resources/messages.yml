@@ -1,10 +1,23 @@
 #
-#   Swofty Parkour
-#    Swofty#0001
+#      Swofty Parkour
+#       Swofty#0001
 #
+#     Messages Config
 #
 
 messages:
   command:
     no-permission: "%%red%%You do not have permission for this command!"
     cooldown: "%%red%%You are currently under cooldown for another $SECONDS seconds"
+    usage:
+      - "&cSwoftyParkour &7- &fMade by Swofty#0001"
+      - "§8- §e/parkour create <name>"
+      - "§8- §e/parkour checkpoint <parkour>"
+      - "§8- §e/parkour end <parkour>"
+      - "§8- §e/parkour delete <parkour> [checkpoint]"
+      - "§8- §e/parkour teleport <parkour> [checkpoint]"
+      - "§8- §e/parkour top <parkour>"
+      - "§8- §e/parkour info <parkour>"
+      - "§8- §e/parkour stats <player>"
+      - "§8- §e/parkour settop <parkour>"
+      - "§8- §e/parkour deltop <parkour>"

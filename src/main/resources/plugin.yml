@@ -1,6 +1,6 @@
-name: SeniorTeamApplication
+name: SwoftyParkour
 version: '${project.version}'
-main: net.swofty.swoftyparkour.plugin.SwoftyParkour
+main: net.swofty.parkour.plugin.SwoftyParkour
 api-version: 1.16
 description: "A 1.19.2 configurable plugin intended for my application for Senior Team"
 author: "Swofty"
