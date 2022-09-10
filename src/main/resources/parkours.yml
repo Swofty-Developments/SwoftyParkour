@@ -1,3 +1,7 @@
 #
 #  Automated, do not touch
 #
+
+parkours:
+  example:
+    finished: false

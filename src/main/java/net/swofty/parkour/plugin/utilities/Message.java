@@ -20,19 +20,19 @@ public class Message
     private String hoverActionValue;
 
     public Message(String message) {
-        this.message = SUtil.color(message);
+        this.message = SUtil.translateColorWords(message);
         messages = new ArrayList<>();
         messages.add(this);
     }
 
     public Message(String message, boolean autoTranslateColourCodes) {
-        this.message = autoTranslateColourCodes ? SUtil.color(message) : message;
+        this.message = autoTranslateColourCodes ? SUtil.translateColorWords(message) : message;
         messages = new ArrayList<>();
         messages.add(this);
     }
 
     public Message action(ClickEvent action) {
-        this.clickAction = new ClickEvent(action.getAction(), SUtil.color(action.getValue()));
+        this.clickAction = new ClickEvent(action.getAction(), SUtil.translateColorWords(action.getValue()));
         return this;
     }
 
@@ -64,7 +64,7 @@ public class Message
             if (clickAction != null)
                 component.setClickEvent(clickAction);
             if (hoverAction != null)
-                component.setHoverEvent(new HoverEvent(hoverAction, new ComponentBuilder(SUtil.color(hoverActionValue)).create()));
+                component.setHoverEvent(new HoverEvent(hoverAction, new ComponentBuilder(SUtil.translateColorWords(hoverActionValue)).create()));
         }
 
         return comp;

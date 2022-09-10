@@ -20,6 +20,9 @@ public class Parkour {
     @Getter
     @Setter
     public List<Location> checkpoints;
+    @Getter
+    @Setter
+    public Boolean finished;
 
     Parkour() {}
 }

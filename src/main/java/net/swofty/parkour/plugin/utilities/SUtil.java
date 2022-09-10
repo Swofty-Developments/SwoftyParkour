@@ -185,11 +185,11 @@ public class SUtil {
                 .replaceAll("%%underlined%%", "§n"));
     }
 
-    public static String color(String string) {
+    private static String color(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
-    public static List<String> color(List<String> string) {
+    private static List<String> color(List<String> string) {
         string.replaceAll(str -> str.replace("&", "§"));
         return string;
     }

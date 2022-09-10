@@ -26,7 +26,7 @@ public class HologramManager {
             toHide.add(new Hologram(
                     parkour.getStartLocation().clone().add(0, 1.5, 0),
                     SUtil.variableize(
-                            SUtil.color(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.start")),
+                            SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.start")),
                             Arrays.asList(Map.entry("$NAME", parkour.getName())))
                     )
             );
@@ -36,7 +36,7 @@ public class HologramManager {
                 toHide.add(new Hologram(
                         location.clone().add(0, 1.5, 0),
                         SUtil.variableize(
-                                SUtil.color(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.checkpoint")),
+                                SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.checkpoint")),
                                 Arrays.asList(Map.entry("$CHECKPOINT", String.valueOf(x.get()))))
                         )
                 );
@@ -44,7 +44,7 @@ public class HologramManager {
             toHide.add(new Hologram(
                     parkour.getEndLocation().clone().add(0, 1.5, 0),
                     SUtil.variableize(
-                            SUtil.color(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.end")),
+                            SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.end")),
                             Arrays.asList(Map.entry("$NAME", parkour.getName())))
                     )
             );
