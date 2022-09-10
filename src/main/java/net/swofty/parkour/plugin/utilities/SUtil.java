@@ -1,5 +1,6 @@
 package net.swofty.parkour.plugin.utilities;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.swofty.parkour.plugin.SwoftyParkour;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,6 +38,13 @@ public class SUtil {
 
     public static ItemStack getStack(String name, Material material, short data, int amount, String... lore) {
         return getStack(name, material, data, amount, Arrays.asList(lore));
+    }
+
+    public static BaseComponent[] combine(BaseComponent[] one, BaseComponent[] two) {
+        BaseComponent[] combined = new BaseComponent[one.length + two.length];
+        System.arraycopy(one, 0, combined, 0, one.length);
+        System.arraycopy(two, 0, combined, one.length, two.length);
+        return combined;
     }
 
     public static ItemStack getStack(String name, Material material, short data, int amount, String l) {

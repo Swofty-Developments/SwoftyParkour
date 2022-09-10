@@ -1,0 +1,10 @@
+#
+#   Swofty Parkour
+#    Swofty#0001
+#
+#
+
+messages:
+  command:
+    no-permission: "%%red%%You do not have permission for this command!"
+    cooldown: "%%red%%You are currently under cooldown for another $SECONDS seconds"
