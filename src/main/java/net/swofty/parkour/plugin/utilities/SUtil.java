@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -71,6 +72,14 @@ public class SUtil {
         return stack;
     }
 
+    public static void delay(Runnable runnable, long delay) {
+        new BukkitRunnable() {
+            public void run() {
+                runnable.run();
+            }
+        }.runTaskLater(SwoftyParkour.getPlugin(), delay);
+    }
+
     public static ItemStack getSkullStack(String name, String skullName, int amount, String... lore) {
         ItemStack stack = getStack(name, Material.PLAYER_HEAD, (short) 3, amount, lore);
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
@@ -118,8 +127,42 @@ public class SUtil {
         return result;
     }
 
+    public static List<String> variableize(List<String> list, List<Map.Entry<String, String>> entries) {
+        entries.forEach(entry -> {
+            list.replaceAll(s -> s.replace(entry.getKey(), entry.getValue()));
+        });
+        return list;
+    }
+
+    public static List<String> translateColorWords(List<String> s) {
+        s.replaceAll(string -> string
+                .replace("%%black%%", "§0")
+                .replace("%%dark-blue%%", "§1")
+                .replace("%%dark-green%%", "§2")
+                .replace("%%dark-aqua%%", "§3")
+                .replace("%%dark-red%%", "§4")
+                .replace("%%purple%%", "§5")
+                .replace("%%gold%%", "§6")
+                .replace("%%gray%%", "§7")
+                .replace("%%dark-gray%%", "§8")
+                .replace("%%blue%%", "§9")
+                .replace("%%green%%", "§a")
+                .replace("%%aqua%%", "§b")
+                .replace("%%red%%", "§c")
+                .replace("%%pink%%", "§d")
+                .replace("%%yellow%%", "§e")
+                .replace("%%white%%", "§f")
+                .replace("%%clear%%", "§r")
+                .replace("%%magic%%", "§k")
+                .replace("%%bold%%", "§l")
+                .replace("%%strike%%", "§m")
+                .replace("%%underlined%%", "§n"));
+        return color(s);
+    }
+
     public static String translateColorWords(String s) {
-        return color(s.replaceAll("%%black%%", "§0")
+        return color(s
+                .replaceAll("%%black%%", "§0")
                 .replaceAll("%%dark-blue%%", "§1")
                 .replaceAll("%%dark-green%%", "§2")
                 .replaceAll("%%dark-aqua%%", "§3")
@@ -144,5 +187,10 @@ public class SUtil {
 
     public static String color(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
+    }
+
+    public static List<String> color(List<String> string) {
+        string.replaceAll(str -> str.replace("&", "§"));
+        return string;
     }
 }

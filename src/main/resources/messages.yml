@@ -21,3 +21,15 @@ messages:
       - "§8- §e/parkour stats <player>"
       - "§8- §e/parkour settop <parkour>"
       - "§8- §e/parkour deltop <parkour>"
+  parkour:
+    holograms:
+      start:
+        - "§aParkour Start"
+        - "§e$NAME"
+        - "§7Goodluck"
+      checkpoint:
+        - "§fCheckpoint #$CHECKPOINT"
+      end:
+        - "§cParkour End"
+        - "§e$NAME"
+        - "§7Congratulations"

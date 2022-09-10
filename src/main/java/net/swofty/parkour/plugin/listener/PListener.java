@@ -6,11 +6,8 @@ import org.bukkit.event.Listener;
 public class PListener implements Listener {
     private static int amount = 0;
 
-    protected SwoftyParkour plugin;
-
     protected PListener() {
-        this.plugin = SwoftyParkour.getPlugin();
-        this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        SwoftyParkour.getPlugin().getServer().getPluginManager().registerEvents(this, SwoftyParkour.getPlugin());
         amount++;
     }
 
