@@ -6,7 +6,7 @@
 
 **[JavaDoc 1.0.0](https://swofty-developments.github.io/SwoftyParkour/)**
 
-A small byte-sized project that contains all of our classes pertaining to console logging, project managed and developed by Swofty.
+An advanced configurable 1.16.x Minecraft Plugin meant for making parkours.
 
 ## Table of contents
 
