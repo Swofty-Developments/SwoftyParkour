@@ -42,7 +42,50 @@ dependencies {
 
 ## Listening to Plugin Events
 
-// ToDo
+To listen to a ParkourEvent, create a class that extends `ParkourEventHandler`. In this class you will be able to override three main different events;
+
+```java
+    public void onParkourStart(ParkourStartEvent e) {}
+    public void onCheckpointHit(CheckpointHitEvent e) {}
+    public void onParkourEnd(ParkourEndEvent e) {}
+```
+
+Example usage can be found as below;
+```java
+public class Example extends ParkourEventHandler {
+
+    @Override
+    public void onParkourStart(ParkourStartEvent e) {
+        Player player = e.getPlayer();
+        Location locationOfFirstCheckpoint = e.getParkour().getCheckpoints().get(0);
+    }
+
+    @Override
+    public void onParkourEnd(ParkourEndEvent e) {
+        Player player = e.getPlayer();
+        Location locationOfFirstCheckpoint = e.getParkour().getCheckpoints().get(0);
+        Long timeSpent = e.getTimeSpent();
+    }
+
+    @Override
+    public void onCheckpointHit(CheckpointHitEvent e) {
+        Player player = e.getPlayer();
+        Location locationOfFirstCheckpoint = e.getParkour().getCheckpoints().get(0);
+        Long timeSpent = e.getTimeSpent();
+        Integer checkPointHit = e.getCheckpointHit();
+        Location locationOfHitCheckpoint = e.getParkour().getCheckpoints().get(checkPointHit);
+    }
+
+}
+```
+
+To register your class as an eventhandler, merely call #getListenerRegistry on the SwoftyParkourAPI class. An example of use is shown below;
+
+```java
+    public static void register() {
+        SwoftyParkourAPI.getListenerRegistry().registerEvent(Example.class);
+    }
+```
 
 ## License
 SwoftyParkour is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/Swofty-Developments/SwoftyParkour/blob/master/LICENSE.txt) for more information.
