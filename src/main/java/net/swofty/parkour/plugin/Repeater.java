@@ -1,5 +1,8 @@
 package net.swofty.parkour.plugin;
 
+import net.swofty.parkour.api.SwoftyParkourAPI;
+import net.swofty.parkour.api.listeners.ListenerRegistry;
+import net.swofty.parkour.api.listeners.ParkourEventHandler;
 import net.swofty.parkour.plugin.parkour.Parkour;
 import net.swofty.parkour.plugin.parkour.ParkourRegistry;
 import net.swofty.parkour.plugin.utilities.SUtil;
@@ -62,6 +65,17 @@ public class Repeater {
                                     SUtil.sendMessageList(player, SUtil.variableize(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.started-parkour"), Arrays.asList(Map.entry("$NAME", parkour.getName()))));
                                 }
 
+                                ListenerRegistry.registeredEvents.forEach(clazz -> {
+                                    try {
+                                        clazz.newInstance().onParkourStart(new ParkourEventHandler.ParkourStartEvent(
+                                                player,
+                                                parkour
+                                        ));
+                                    } catch (InstantiationException | IllegalAccessException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                });
+
                                 ParkourRegistry.playerParkourCache.put(
                                         player.getUniqueId(),
                                         Map.entry(parkour, Map.entry(0, System.currentTimeMillis()))
@@ -79,6 +93,38 @@ public class Repeater {
                                     return;
                                 }
 
+                                if (ParkourRegistry.playerParkourCache.containsKey(player.getUniqueId())) {
+                                    int platesHit = ParkourRegistry.playerParkourCache.get(player.getUniqueId()).getValue().getKey();
+
+                                    if (platesHit == parkour.checkpoints.size()) {
+                                        ListenerRegistry.registeredEvents.forEach(clazz -> {
+                                            try {
+                                                clazz.newInstance().onParkourEnd(new ParkourEventHandler.ParkourEndEvent(
+                                                        player,
+                                                        parkour,
+                                                        System.currentTimeMillis() - ParkourRegistry.playerParkourCache.get(player.getUniqueId()).getValue().getValue()
+                                                ));
+                                            } catch (InstantiationException | IllegalAccessException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        });
+
+                                        long timeSpent = System.currentTimeMillis() - ParkourRegistry.playerParkourCache.get(player.getUniqueId()).getValue().getValue();
+                                        SUtil.sendMessageList(player, SUtil.translateColorWords(SUtil.variableize(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.finished-course"), Arrays.asList(
+                                                Map.entry("$NAME", parkour.getName()),
+                                                Map.entry("$TIME", SUtil.millisToLongDHMS(timeSpent))))
+                                        ));
+
+                                        ParkourRegistry.playerParkourCache.remove(player.getUniqueId());
+                                        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+                                    } else {
+                                        player.sendMessage(SUtil.translateColorWords(SUtil.variableize(SwoftyParkour.getPlugin().getMessages().getString("messages.parkour.missed-plate"), Arrays.asList(Map.entry("$PLATE", String.valueOf(platesHit + 1))))));
+                                        ParkourRegistry.playerParkourCache.remove(player.getUniqueId());
+                                        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+                                    }
+                                } else {
+                                    player.sendMessage(SUtil.translateColorWords(SUtil.variableize(SwoftyParkour.getPlugin().getMessages().getString("messages.parkour.must-touch-start-plate"), Arrays.asList(Map.entry("$NAME", parkour.getName())))));
+                                }
                                 return;
                             }
                         }
@@ -100,6 +146,19 @@ public class Repeater {
                                         int previousPlate = ParkourRegistry.playerParkourCache.get(player.getUniqueId()).getValue().getKey();
 
                                         if (currentPlate == previousPlate + 1) {
+                                            ListenerRegistry.registeredEvents.forEach(clazz -> {
+                                                try {
+                                                    clazz.newInstance().onCheckpointHit(new ParkourEventHandler.CheckpointHitEvent(
+                                                            player,
+                                                            parkour,
+                                                            currentPlate,
+                                                            System.currentTimeMillis() - ParkourRegistry.playerParkourCache.get(player.getUniqueId()).getValue().getValue()
+                                                    ));
+                                                } catch (InstantiationException | IllegalAccessException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            });
+
                                             ParkourRegistry.playerParkourCache.put(
                                                     player.getUniqueId(),
                                                     Map.entry(parkour, Map.entry(currentPlate, ParkourRegistry.playerParkourCache.get(player.getUniqueId()).getValue().getValue()))

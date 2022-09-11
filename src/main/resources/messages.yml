@@ -73,6 +73,9 @@ messages:
     started-parkour:
       - "§aYou have started the §e$NAME §aparkour"
       - "§7Try to complete the course as fast as you can"
+    finished-course:
+      - "§aCompleted the §e$NAME §aparkour"
+      - "§bYou took §e$TIME"
     holograms:
       start:
         - "§aParkour Start"
