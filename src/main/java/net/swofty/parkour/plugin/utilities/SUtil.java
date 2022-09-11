@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -144,6 +145,47 @@ public class SUtil {
             list.replaceAll(s -> s.replace(entry.getKey(), entry.getValue()));
         });
         return list;
+    }
+
+    public static Material getPlate(PlateType plateType) {
+        switch (plateType) {
+            case START:
+                if (SwoftyParkour.getPlugin().getConfig().getString("pressure-plate-types.start").equals("GOLD")) {
+                    return Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
+                } else {
+                    return Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
+                }
+            case CHECKPOINT:
+                if (SwoftyParkour.getPlugin().getConfig().getString("pressure-plate-types.checkpoint").equals("GOLD")) {
+                    return Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
+                } else {
+                    return Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
+                }
+            case END:
+                if (SwoftyParkour.getPlugin().getConfig().getString("pressure-plate-types.end").equals("GOLD")) {
+                    return Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
+                } else {
+                    return Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
+                }
+        }
+        return null;
+    }
+
+    public enum PlateType {
+        START(),
+        CHECKPOINT(),
+        END()
+    }
+
+    public static String variableize(String str, List<Map.Entry<String, String>> entries) {
+        for (Map.Entry<String, String> entry : entries) {
+            str = str.replace(entry.getKey(), entry.getValue());
+        }
+        return str;
+    }
+
+    public static void sendMessageList(Player player, List<String> list) {
+        SUtil.translateColorWords(list).forEach(player::sendMessage);
     }
 
     public static List<String> translateColorWords(List<String> s) {

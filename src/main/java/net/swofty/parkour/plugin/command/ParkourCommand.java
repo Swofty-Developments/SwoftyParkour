@@ -61,8 +61,21 @@ public abstract class ParkourCommand implements CommandExecutor, TabCompleter {
 
         @Override
         public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-            if (args.length == 0 || this.parkourCommand == null) {
-                SwoftyParkour.getPlugin().messages.getStringList("messages.command.usage").forEach(s -> {
+            if (args.length == 0) {
+                SwoftyParkour.getPlugin().messages.getStringList("messages.command.usage-overall").forEach(s -> {
+                    sender.sendMessage(SUtil.translateColorWords(s));
+                });
+                return false;
+            }
+
+            for (ParkourCommand parkourCommand1 : CommandLoader.commands) {
+                if (parkourCommand1.name.equals(args[0]) || parkourCommand1.aliases.contains(args[0])) {
+                    this.parkourCommand = parkourCommand1;
+                }
+            }
+
+            if (this.parkourCommand == null) {
+                SwoftyParkour.getPlugin().messages.getStringList("messages.command.usage-overall").forEach(s -> {
                     sender.sendMessage(SUtil.translateColorWords(s));
                 });
                 return false;
@@ -121,20 +134,12 @@ public abstract class ParkourCommand implements CommandExecutor, TabCompleter {
     }
 
     public void send(String message) {
-        send(message.replace("&", "§"), sender);
+        send(SUtil.translateColorWords(message), sender);
     }
 
-    public void send(Message msg) {
-        msg.send(sender.getPlayer());
-    }
-
-    public void sound(Sound sound, float pitch) {
-        if (sender.getSender() instanceof Player) {
-            sender.getPlayer().playSound(sender.getPlayer().getLocation(), sound, 1, pitch);
-        }
-    }
-
-    public void send(String message, Player player) {
-        player.sendMessage(ChatColor.GRAY + message.replace("&", "§"));
+    public void send(List<String> message) {
+        SUtil.translateColorWords(message).forEach(message2 -> {
+            sender.send(message2);
+        });
     }
 }

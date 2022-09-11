@@ -11,12 +11,16 @@ import net.swofty.parkour.plugin.parkour.ParkourRegistry;
 import net.swofty.parkour.plugin.sql.SQLDatabase;
 import net.swofty.parkour.plugin.utilities.SUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class SwoftyParkour extends JavaPlugin {
 
@@ -26,6 +30,8 @@ public final class SwoftyParkour extends JavaPlugin {
     public CommandMap commandMap;
     @Getter
     public Config messages;
+    @Getter
+    public Repeater repeater;
     @Getter
     public Config config;
     @Getter
@@ -77,10 +83,13 @@ public final class SwoftyParkour extends JavaPlugin {
                 HologramManager.runHologramLoop();
             }
         }.runTaskTimer(this, 10, 10);
+        replacePlates();
+        repeater = new Repeater();
     }
 
     @Override
     public void onDisable() {
+        repeater.stop();
         plugin = null;
     }
 
@@ -107,5 +116,24 @@ public final class SwoftyParkour extends JavaPlugin {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private void replacePlates() {
+        ParkourRegistry.getParkourRegistry().forEach(parkour -> {
+            if (parkour.getStartLocation() != null) {
+                Location loc = parkour.getStartLocation();
+                loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.START));
+            }
+            if (parkour.getCheckpoints() != null) {
+                parkour.getCheckpoints().forEach(location -> {
+                    Location loc = location;
+                    loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.CHECKPOINT));
+                });
+            }
+            if (parkour.getEndLocation() != null) {
+                Location loc = parkour.getEndLocation();
+                loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.END));
+            }
+        });
     }
 }

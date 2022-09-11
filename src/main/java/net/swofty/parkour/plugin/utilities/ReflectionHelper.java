@@ -44,7 +44,6 @@ public class ReflectionHelper {
     }
 
     public static void sendPacket(Packet<?> packet, Player player, boolean async) {
-        System.out.println("Pushing out packet " + packet.toString());
         if (async)
             SUtil.runAsync(() -> ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet));
         else

@@ -5,13 +5,14 @@ import net.swofty.parkour.plugin.data.Config;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ParkourRegistry {
 
     @Getter
     public static ArrayList<Parkour> parkourRegistry = new ArrayList<>();
+    @Getter
+    public static HashMap<UUID, Map.Entry<Parkour, Map.Entry<Integer, Long>>> playerParkourCache = new HashMap<>();
 
     public static void loadFromConfig(Config config) {
         if (!config.contains("parkours")) return;
@@ -21,17 +22,17 @@ public class ParkourRegistry {
             Parkour parkour = new Parkour();
 
             parkour.setFinished(section.getBoolean("finished"));
-
-            if (!parkour.getFinished()) return;
-
             parkour.setName(section.getString("name"));
             parkour.setStartLocation((Location) section.get("start"));
             parkour.setEndLocation((Location) section.get("end"));
             parkour.setTop((Location) section.get("top"));
             List<Location> checkpoints = new ArrayList<>();
-            section.getConfigurationSection("checkpoints").getKeys(true).stream().sorted().forEach(s -> {
-                checkpoints.add((Location) section.getConfigurationSection("checkpoints").getConfigurationSection(s).get("location"));
-            });
+            if (section.getConfigurationSection("checkpoints") != null) {
+                section.getConfigurationSection("checkpoints").getKeys(true).stream().sorted().forEach(s -> {
+                    checkpoints.add((Location) section.getConfigurationSection("checkpoints").get(s));
+                });
+            }
+            parkour.setCheckpoints(checkpoints);
 
             parkourRegistry.add(parkour);
         });
@@ -47,8 +48,16 @@ public class ParkourRegistry {
         return null;
     }
 
+    public static void updateParkour(String name, Parkour parkour) {
+        parkourRegistry.removeIf(parkour2 -> parkour2.getName().equalsIgnoreCase(name));
+        parkourRegistry.add(parkour);
+    }
+
     public static void saveParkour(Parkour parkour, Config config) {
-        ConfigurationSection section = config.getConfigurationSection("parkours").getConfigurationSection(parkour.getName());
+        if (config.getConfigurationSection("parkours") == null) {
+            config.createSection("parkours");
+        }
+        ConfigurationSection section = config.getConfigurationSection("parkours").createSection(parkour.getName());
 
         section.set("finished", parkour.getFinished());
         section.set("name", parkour.getName());
@@ -58,9 +67,12 @@ public class ParkourRegistry {
         section.set("checkpoints", "");
         section.createSection("checkpoints");
         int x = 0;
-        for (Location checkpoint : parkour.checkpoints) {
-            x++;
-            section.getConfigurationSection("checkpoints").set(String.valueOf(x), checkpoint);
+        if (parkour.checkpoints != null) {
+            for (Location checkpoint : parkour.checkpoints) {
+                x++;
+                section.getConfigurationSection("checkpoints").set(String.valueOf(x), checkpoint);
+            }
         }
+        config.save();
     }
 }

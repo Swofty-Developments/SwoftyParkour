@@ -16,10 +16,24 @@ hex-colors:
   HEXCOLOREXAMPLE: "#3CEC5D"
 
 messages:
+  # Supports the variables;
+  # $NAME - Parkour Name
+  # $TIME - Elapsed Time
+  # $POSITION_<PARKOUR NAME> - Current position in leaderboard ranking for a specific parkour
+  # $POSITION - Current position in leaderboard ranking for current parkour
+  scoreboard:
+    - "§e§l Parkour"
+    - "§f "
+    - "§fParkour: §a$NAME"
+    - "§fTime: §b$TIME"
+    - "§fPosition: §e$POSITION"
+    - "§e "
+    - "§ewww.example.com"
   command:
     no-permission: "%%red%%You do not have permission for this command!"
+    usage-command: "%%red%%Usage: $USAGE"
     cooldown: "%%red%%You are currently under cooldown for another $SECONDS seconds"
-    usage:
+    usage-overall:
       - "&cSwoftyParkour &7- &fMade by Swofty#0001"
       - "§8- §e/parkour create <name>"
       - "§8- §e/parkour checkpoint <parkour>"
@@ -31,13 +45,41 @@ messages:
       - "§8- §e/parkour stats <player>"
       - "§8- §e/parkour settop <parkour>"
       - "§8- §e/parkour deltop <parkour>"
+    name-already-taken: "§cThere is already a parkour named $NAME"
+    parkour-not-found: "§cCould not find a parkour named $NAME"
+    creation-message:
+      - "§aSuccessfully set start of the §e$NAME §aparkour"
+      - "§bUse §e/parkour checkpoint $NAME §bto place down checkpoints"
+    checkpoint-placed:
+      - "§aSuccessfully set checkpoint §f#$CHECKPOINT §afor the §e$NAME §aparkour"
+      - "§bUse §e/parkour checkpoint $NAME §bto place down more checkpoints"
+      - "§bUse §e/parkour end $NAME §bto place down the parkour finish"
+    end-placed:
+      - "§aSuccessfully set end of the §e$NAME §aparkour"
+      - "§bFor further command usage, please run §c/parkour"
   parkour:
+    must-touch-start-plate: "§cYou have touched the plate of the §e$NAME §cparkour even though you are not in this parkour"
+    missed-plate: "§cYou missed plate §f#$PLATE§c, restarting parkour"
+    went-back: "§cYou have already hit this checkpoint"
+    successfully-hit-plate: "§aReached checkpoint §f#$PLATE"
+    parkour-not-finished:
+      - "§cYou cannot use this parkour course until it has"
+      - "§f- A starting point"
+      - "§6- An ending point"
+    left-parkour:
+      - "§cYou have left the $NAME parkour"
+    restarted-parkour:
+      - "§aYou have reset the timer"
+    started-parkour:
+      - "§aYou have started the §e$NAME §aparkour"
+      - "§7Try to complete the course as fast as you can"
     holograms:
       start:
         - "§aParkour Start"
         - "§e$NAME"
         - "§7Goodluck"
       checkpoint:
+        - "§aParkour Checkpoint &7($NAME)"
         - "§fCheckpoint #$CHECKPOINT"
       end:
         - "§cParkour End"

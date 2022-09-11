@@ -6,3 +6,8 @@
 #
 
 hologram-split-size: 0.3
+pressure-plate-types:
+  # Valid types are 'IRON' and 'GOLD'
+  start: "GOLD"
+  checkpoint: "IRON"
+  end: "GOLD"

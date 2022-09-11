@@ -17,37 +17,40 @@ public class HologramManager {
     public static void runHologramLoop() {
         Bukkit.getOnlinePlayers().forEach(player -> {
             toHide.forEach(s -> {
-                s.hide(player);
+                s.hide(player, true);
             });
             toHide.clear();
         });
 
         ParkourRegistry.parkourRegistry.forEach(parkour -> {
-            toHide.add(new Hologram(
-                    parkour.getStartLocation().clone().add(0, 1.5, 0),
-                    SUtil.variableize(
-                            SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.start")),
-                            Arrays.asList(Map.entry("$NAME", parkour.getName())))
-                    )
-            );
-            AtomicInteger x = new AtomicInteger();
-            parkour.getCheckpoints().forEach(location -> {
-                x.getAndIncrement();
+            if (parkour.getStartLocation() != null) {
                 toHide.add(new Hologram(
-                        location.clone().add(0, 1.5, 0),
+                        parkour.getStartLocation().clone().add(0.5, -0.5, 0.5),
                         SUtil.variableize(
-                                SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.checkpoint")),
-                                Arrays.asList(Map.entry("$CHECKPOINT", String.valueOf(x.get()))))
-                        )
+                                SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.start")),
+                                Arrays.asList(Map.entry("$NAME", parkour.getName()))))
                 );
-            });
-            toHide.add(new Hologram(
-                    parkour.getEndLocation().clone().add(0, 1.5, 0),
-                    SUtil.variableize(
-                            SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.end")),
-                            Arrays.asList(Map.entry("$NAME", parkour.getName())))
-                    )
-            );
+            }
+            if (parkour.getCheckpoints() != null) {
+                AtomicInteger x = new AtomicInteger();
+                parkour.getCheckpoints().forEach(location -> {
+                    x.getAndIncrement();
+                    toHide.add(new Hologram(
+                            location.clone().add(0.5, -0.5, 0.5),
+                            SUtil.variableize(
+                                    SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.checkpoint")),
+                                    Arrays.asList(Map.entry("$CHECKPOINT", String.valueOf(x.get())), Map.entry("$NAME", parkour.getName()))))
+                    );
+                });
+            }
+            if (parkour.getEndLocation() != null) {
+                toHide.add(new Hologram(
+                        parkour.getEndLocation().clone().add(0.5, -0.5, 0.5),
+                        SUtil.variableize(
+                                SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.end")),
+                                Arrays.asList(Map.entry("$NAME", parkour.getName()))))
+                );
+            }
         });
 
         Bukkit.getOnlinePlayers().forEach(player -> {
