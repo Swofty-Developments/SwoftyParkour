@@ -1,5 +1,6 @@
 package net.swofty.parkour.plugin.command.subtypes;
 
+import lombok.SneakyThrows;
 import net.swofty.parkour.plugin.SwoftyParkour;
 import net.swofty.parkour.plugin.command.CommandCooldown;
 import net.swofty.parkour.plugin.command.CommandParameters;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @CommandParameters(permission = "parkour.admin.end")
 public class subCommand_end extends ParkourCommand implements CommandCooldown {
 
+    @SneakyThrows
     @Override
     public void run(CommandSource sender, String[] args) {
         if (args.length == 1) {
@@ -49,6 +51,11 @@ public class subCommand_end extends ParkourCommand implements CommandCooldown {
         ParkourRegistry.saveParkour(parkour, SwoftyParkour.getPlugin().parkours);
 
         loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.END));
+
+        SwoftyParkour.getPlugin().getSql().getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `parkour_" + parkour.getName() + "` (\n" +
+                "\t`uuid` TEXT,\n" +
+                "\t`time` INT(64)\n" +
+                ");").execute();
 
         send(SUtil.variableize(
                 SwoftyParkour.getPlugin().messages.getStringList("messages.command.end-placed"),

@@ -61,6 +61,11 @@ public abstract class ParkourCommand implements CommandExecutor, TabCompleter {
 
         @Override
         public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+            if (!(sender instanceof Player)) {
+                System.out.println("Console senders cannot use commands");
+                return false;
+            }
+
             if (args.length == 0) {
                 SwoftyParkour.getPlugin().messages.getStringList("messages.command.usage-overall").forEach(s -> {
                     sender.sendMessage(SUtil.translateColorWords(s));

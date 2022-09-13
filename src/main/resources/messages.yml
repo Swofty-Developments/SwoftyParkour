@@ -19,6 +19,7 @@ messages:
   # Supports the variables;
   # $NAME - Parkour Name
   # $TIME - Elapsed Time
+  # $PREVIOUS_BEST - Previous best time
   # $POSITION_<PARKOUR NAME> - Current position in leaderboard ranking for a specific parkour
   # $POSITION - Current position in leaderboard ranking for current parkour
   scoreboard:
@@ -27,6 +28,7 @@ messages:
     - "§fParkour: §a$NAME"
     - "§fTime: §b$TIME"
     - "§fPosition: §e$POSITION"
+    - "§fPrev Best: §e$PREVIOUS_BEST"
     - "§e "
     - "§ewww.example.com"
   command:
@@ -45,8 +47,13 @@ messages:
       - "§8- §e/parkour stats <player>"
       - "§8- §e/parkour settop <parkour>"
       - "§8- §e/parkour deltop <parkour>"
-    name-already-taken: "§cThere is already a parkour named $NAME"
-    parkour-not-found: "§cCould not find a parkour named $NAME"
+    name-already-taken: "§cThere is already a parkour named §e$NAME"
+    invalid-number-input: "§e$INPUT §cis not a valid number!"
+    parkour-not-found: "§cCould not find a parkour named §e$NAME"
+    parkour-deleted: "§aDeleted parkour §e$NAME"
+    checkpoint-deleted: "§aDeleted checkpoint §e$CHECKPOINT"
+    parkour-set-top: "§aSet the leaderboard hologram for §e$NAME"
+    parkour-deleted-top: "§aDeleted the leaderboard hologram for §e$NAME"
     creation-message:
       - "§aSuccessfully set start of the §e$NAME §aparkour"
       - "§bUse §e/parkour checkpoint $NAME §bto place down checkpoints"
@@ -62,6 +69,7 @@ messages:
     missed-plate: "§cYou missed plate §f#$PLATE§c, restarting parkour"
     went-back: "§cYou have already hit this checkpoint"
     successfully-hit-plate: "§aReached checkpoint §f#$PLATE"
+    flew-during-course: "§cYou cannot fly during a parkour course!"
     parkour-not-finished:
       - "§cYou cannot use this parkour course until it has"
       - "§f- A starting point"
@@ -73,9 +81,12 @@ messages:
     started-parkour:
       - "§aYou have started the §e$NAME §aparkour"
       - "§7Try to complete the course as fast as you can"
-    finished-course:
+    finished-course-new-score:
       - "§aCompleted the §e$NAME §aparkour"
-      - "§bYou took §e$TIME"
+      - "§bYou took §e$TIME§b, which beats your old score of §e$OLD"
+    finished-course-worse-score:
+      - "§aCompleted the §e$NAME §aparkour"
+      - "§bYou took §e$TIME§b, which sadly does not beat your top score of §e$OLD"
     holograms:
       start:
         - "§aParkour Start"
@@ -88,3 +99,9 @@ messages:
         - "§cParkour End"
         - "§e$NAME"
         - "§7Congratulations"
+      leaderboard-top:
+        - "§b$NAME§a's Leaderboard"
+        - "§7Parkour"
+      leaderboard-entry: "§7$NUMBER. §e$USERNAME §8- §e$TIME"
+      leaderboard-bottom:
+        - "§b$NAME§a's Leaderboard"

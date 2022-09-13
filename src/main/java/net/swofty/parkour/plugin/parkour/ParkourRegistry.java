@@ -53,6 +53,11 @@ public class ParkourRegistry {
         parkourRegistry.add(parkour);
     }
 
+    public static void removeParkour(String name, Config config) {
+        config.getConfigurationSection("parkours").set(name, null);
+        config.save();
+    }
+
     public static void saveParkour(Parkour parkour, Config config) {
         if (config.getConfigurationSection("parkours") == null) {
             config.createSection("parkours");

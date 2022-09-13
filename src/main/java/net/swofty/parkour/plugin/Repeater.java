@@ -13,24 +13,59 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Repeater {
     private final List<BukkitTask> tasks;
-    private ArrayList<UUID> delayed = new ArrayList<>();
+    private ArrayList<UUID> delayedStart = new ArrayList<>();
+    private ArrayList<UUID> delayedEnd = new ArrayList<>();
+    private HashMap<UUID, Integer> delayedCheckpoint = new HashMap<>();
 
-    public boolean isDelayed(Player player) {
-        if (delayed.contains(player.getUniqueId())) {
+    public boolean isDelayedStart(Player player) {
+        if (delayedStart.contains(player.getUniqueId())) {
             return true;
         }
 
-        delayed.add(player.getUniqueId());
+        delayedStart.add(player.getUniqueId());
         new BukkitRunnable() {
             @Override
             public void run() {
-                delayed.remove(player.getUniqueId());
+                delayedStart.remove(player.getUniqueId());
+            }
+        }.runTaskLater(SwoftyParkour.getPlugin(), 15);
+        return false;
+    }
+
+    public boolean isDelayedEnd(Player player) {
+        if (delayedEnd.contains(player.getUniqueId())) {
+            return true;
+        }
+
+        delayedEnd.add(player.getUniqueId());
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                delayedEnd.remove(player.getUniqueId());
+            }
+        }.runTaskLater(SwoftyParkour.getPlugin(), 15);
+        return false;
+    }
+
+    public boolean isDelayedCheckpoint(Player player, Integer checkpoint) {
+        if (delayedCheckpoint.containsKey(player.getUniqueId()) && delayedCheckpoint.get(player.getUniqueId()).equals(checkpoint)) {
+            return true;
+        }
+
+        delayedCheckpoint.put(player.getUniqueId(), checkpoint);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                delayedCheckpoint.remove(player.getUniqueId(), checkpoint);
             }
         }.runTaskLater(SwoftyParkour.getPlugin(), 15);
         return false;
@@ -47,7 +82,7 @@ public class Repeater {
                         Location playerLoc = player.getLocation();
                         if (parkour.getStartLocation() != null) {
                             if (parkour.getStartLocation().distance(playerLoc) < 1) {
-                                if (isDelayed(player)) return;
+                                if (isDelayedStart(player)) return;
 
                                 if (!parkour.getFinished()) {
                                     SUtil.sendMessageList(player, SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.parkour-not-finished"));
@@ -86,7 +121,7 @@ public class Repeater {
 
                         if (parkour.getEndLocation() != null) {
                             if (parkour.getEndLocation().distance(playerLoc) < 1) {
-                                if (isDelayed(player)) return;
+                                if (isDelayedEnd(player)) return;
 
                                 if (!parkour.getFinished()) {
                                     SUtil.sendMessageList(player, SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.parkour-not-finished"));
@@ -110,10 +145,38 @@ public class Repeater {
                                         });
 
                                         long timeSpent = System.currentTimeMillis() - ParkourRegistry.playerParkourCache.get(player.getUniqueId()).getValue().getValue();
-                                        SUtil.sendMessageList(player, SUtil.translateColorWords(SUtil.variableize(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.finished-course"), Arrays.asList(
-                                                Map.entry("$NAME", parkour.getName()),
-                                                Map.entry("$TIME", SUtil.millisToLongDHMS(timeSpent))))
-                                        ));
+                                        long oldTimeSpent = SwoftyParkour.getPlugin().getSql().getParkourTime(parkour, player.getUniqueId()) == null ? 0 : SwoftyParkour.getPlugin().getSql().getParkourTime(parkour, player.getUniqueId());
+
+                                        if (oldTimeSpent < timeSpent && oldTimeSpent != 0) {
+                                            SUtil.sendMessageList(player, SUtil.translateColorWords(SUtil.variableize(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.finished-course-worse-score"), Arrays.asList(
+                                                    Map.entry("$NAME", parkour.getName()),
+                                                    Map.entry("$TIME", new SimpleDateFormat("mm:ss.SSS").format(timeSpent)),
+                                                    Map.entry("$OLD", new SimpleDateFormat("mm:ss.SSS").format(oldTimeSpent))))
+                                            ));
+                                        } else {
+                                            SUtil.sendMessageList(player, SUtil.translateColorWords(SUtil.variableize(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.finished-course-new-score"), Arrays.asList(
+                                                    Map.entry("$NAME", parkour.getName()),
+                                                    Map.entry("$TIME", new SimpleDateFormat("mm:ss.SSS").format(timeSpent)),
+                                                    Map.entry("$OLD", new SimpleDateFormat("mm:ss.SSS").format(oldTimeSpent))))
+                                            ));
+
+                                            try {
+                                                if (SwoftyParkour.getPlugin().getSql().getParkourTime(parkour, player.getUniqueId()) == null) {
+                                                    PreparedStatement statement = SwoftyParkour.getPlugin().getSql().getConnection().prepareStatement("INSERT INTO `parkour_" + parkour.getName() + "` (`uuid`, `time`) VALUES (?, ?)");
+                                                    statement.setString(1, player.getUniqueId().toString());
+                                                    statement.setLong(2, timeSpent);
+                                                    statement.executeUpdate();
+                                                    statement.close();
+                                                } else {
+                                                    PreparedStatement statement = SwoftyParkour.getPlugin().getSql().getConnection().prepareStatement("UPDATE `parkour_" + parkour.getName() + "` SET time=" + timeSpent + " WHERE uuid=?");
+                                                    statement.setString(1, player.getUniqueId().toString());
+                                                    statement.executeUpdate();
+                                                    statement.close();
+                                                }
+                                            } catch (SQLException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }
 
                                         ParkourRegistry.playerParkourCache.remove(player.getUniqueId());
                                         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
@@ -134,7 +197,7 @@ public class Repeater {
                             parkour.getCheckpoints().forEach(location -> {
                                 if (location.distance(player.getLocation()) < 1) {
                                     x.getAndIncrement();
-                                    if (isDelayed(player)) return;
+                                    if (isDelayedCheckpoint(player, x.get())) return;
 
                                     if (!parkour.getFinished()) {
                                         SUtil.sendMessageList(player, SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.parkour-not-finished"));
@@ -183,7 +246,7 @@ public class Repeater {
                     }
                 });
             }
-        }.runTaskTimer(SwoftyParkour.getPlugin(), 3, 2));
+        }.runTaskTimer(SwoftyParkour.getPlugin(), 3, 1));
 
         this.tasks.add(new BukkitRunnable() {
             @Override
@@ -198,8 +261,11 @@ public class Repeater {
                             scoreboardLines.add(SUtil.variableize(SUtil.translateColorWords(entry2),
                                     Arrays.asList(
                                             Map.entry("$NAME", entry.getValue().getKey().getName()),
-                                            Map.entry("$TIME", String.valueOf(new DecimalFormat("#.00").format(Double.parseDouble(String.valueOf(System.currentTimeMillis() - entry.getValue().getValue().getValue())) / 1000))))
-                            ));
+                                            Map.entry("$TIME", String.valueOf(new DecimalFormat("#.00").format(Double.parseDouble(String.valueOf(System.currentTimeMillis() - entry.getValue().getValue().getValue())) / 1000))),
+                                            Map.entry("$PREVIOUS_BEST",
+                                                    String.valueOf(SwoftyParkour.getPlugin().getSql().getParkourTime(entry.getValue().getKey(), entry.getKey())).equals("null") ?
+                                                            "§cNever completed" : new SimpleDateFormat("mm:ss.SSS").format(SwoftyParkour.getPlugin().getSql().getParkourTime(entry.getValue().getKey(), entry.getKey())))
+                            )));
                         });
                         //Collections.reverse(scoreboardLines); - did not end up needing this
 

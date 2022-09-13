@@ -17,7 +17,7 @@ import java.util.*;
 @Getter
 public class Hologram {
 
-    private static final double DELTA = SwoftyParkour.getPlugin().getConfig().getDouble("hologram-split-size");
+    public static final double DELTA = SwoftyParkour.getPlugin().getConfig().getDouble("hologram-split-size");
 
     public static final Map<UUID, HashMap<String, Hologram>> HOLO_MAP = new HashMap<>();
     public static final Map<String, Hologram> HOLOGRAM_CACHE = new HashMap<>();
