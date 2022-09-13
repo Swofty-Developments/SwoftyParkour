@@ -262,6 +262,7 @@ public class Repeater {
                                     Arrays.asList(
                                             Map.entry("$NAME", entry.getValue().getKey().getName()),
                                             Map.entry("$TIME", String.valueOf(new DecimalFormat("#.00").format(Double.parseDouble(String.valueOf(System.currentTimeMillis() - entry.getValue().getValue().getValue())) / 1000))),
+                                            Map.entry("$POSITION", SwoftyParkour.getPlugin().getSql().getPosition(player.getUniqueId(), entry.getValue().getKey()) == 0 ? "§cNever completed" : String.valueOf(SwoftyParkour.getPlugin().getSql().getPosition(player.getUniqueId(), entry.getValue().getKey()))),
                                             Map.entry("$PREVIOUS_BEST",
                                                     String.valueOf(SwoftyParkour.getPlugin().getSql().getParkourTime(entry.getValue().getKey(), entry.getKey())).equals("null") ?
                                                             "§cNever completed" : new SimpleDateFormat("mm:ss.SSS").format(SwoftyParkour.getPlugin().getSql().getParkourTime(entry.getValue().getKey(), entry.getKey())))

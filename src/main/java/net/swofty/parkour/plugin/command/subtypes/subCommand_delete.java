@@ -66,6 +66,7 @@ public class subCommand_delete extends ParkourCommand implements CommandCooldown
 
                     ParkourRegistry.updateParkour(parkour.getName(), parkour);
                     ParkourRegistry.saveParkour(parkour, SwoftyParkour.getPlugin().getParkours());
+                    send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.checkpoint-deleted")), Arrays.asList(Map.entry("$CHECKPOINT", checkpoint))));
                 }
             } else {
                 send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));

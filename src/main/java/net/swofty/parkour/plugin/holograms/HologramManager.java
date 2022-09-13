@@ -14,13 +14,18 @@ import java.util.stream.Collectors;
 public class HologramManager {
 
     public static ArrayList<Hologram> toHide = new ArrayList<>();
+    public static ArrayList<Hologram> toHide2 = new ArrayList<>();
 
     public static void runHologramLoop() {
         Bukkit.getOnlinePlayers().forEach(player -> {
             toHide.forEach(s -> {
                 s.hide(player, true);
             });
+            toHide2.forEach(s -> {
+                s.hide(player, true);
+            });
             toHide.clear();
+            toHide2.clear();
         });
 
         ParkourRegistry.parkourRegistry.forEach(parkour -> {
@@ -54,23 +59,11 @@ public class HologramManager {
             }
             if (parkour.getTop() != null) {
                 Location location = parkour.getTop();
-                Map<UUID, Long> sortedLeaderboard2 = SwoftyParkour.getPlugin().getSql().getParkourTop(parkour);
-                Map<UUID, Long> sortedLeaderboard = new HashMap<>();
-
-                List<UUID> alKeys = new ArrayList<>(sortedLeaderboard2.keySet());
-                for(UUID strKey : alKeys){
-                    sortedLeaderboard.put(strKey, sortedLeaderboard2.get(strKey));
-                }
-
-                ArrayList<String> hologram = new ArrayList<>();
-                hologram.addAll(
-                        SUtil.variableize(
-                                SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.leaderboard-top")),
-                                Arrays.asList(Map.entry("$NAME", parkour.getName()))));
-
+                Map<UUID, Long> sortedLeaderboard = SUtil.sortByValue(new HashMap<>(SwoftyParkour.getPlugin().getSql().getParkourTop(parkour)));
+                ArrayList<String> cached = new ArrayList<>();
                 for (int x = 0; x < 9; x++) {
                     if (sortedLeaderboard.size() <= x) {
-                        hologram.add(SUtil.variableize(
+                        cached.add(SUtil.variableize(
                                 SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getString("messages.parkour.holograms.leaderboard-entry")),
                                 Arrays.asList(
                                         Map.entry("$NUMBER", String.valueOf(x + 1)),
@@ -78,7 +71,7 @@ public class HologramManager {
                                         Map.entry("$TIME", "§cNone")
                                 )));
                     } else {
-                        hologram.add(SUtil.variableize(
+                        cached.add(SUtil.variableize(
                                 SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getString("messages.parkour.holograms.leaderboard-entry")),
                                 Arrays.asList(
                                         Map.entry("$NUMBER", String.valueOf(x + 1)),
@@ -88,12 +81,50 @@ public class HologramManager {
                     }
                 }
 
-                hologram.addAll(
-                        SUtil.variableize(
-                                SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.leaderboard-bottom")),
-                                Arrays.asList(Map.entry("$NAME", parkour.getName()))));
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    ArrayList<String> hologram = new ArrayList<>();
+                    if (SwoftyParkour.getPlugin().getSql().getPosition(player.getUniqueId(), parkour) != 0) {
+                        hologram.addAll(
+                                SUtil.variableize(
+                                        SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.leaderboard-top")),
+                                        Arrays.asList(
+                                                Map.entry("$NAME", parkour.getName()),
+                                                Map.entry("$PLAYERTIME", new SimpleDateFormat("mm:ss.SSS").format(SwoftyParkour.getPlugin().getSql().getTimesForPlayer(player.getUniqueId()).get(parkour)))
+                                        )));
+                    } else {
+                        hologram.addAll(
+                                SUtil.variableize(
+                                        SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.leaderboard-top")),
+                                        Arrays.asList(
+                                                Map.entry("$NAME", parkour.getName()),
+                                                Map.entry("$PLAYERTIME", "§cNever completed course")
+                                        )));
+                    }
 
-                toHide.add(new Hologram(location, hologram));
+                    hologram.addAll(cached);
+
+                    if (SwoftyParkour.getPlugin().getSql().getPosition(player.getUniqueId(), parkour) != 0) {
+                        hologram.addAll(
+                                SUtil.variableize(
+                                        SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.leaderboard-bottom")),
+                                        Arrays.asList(
+                                                Map.entry("$NAME", parkour.getName()),
+                                                Map.entry("$PLAYERTIME", new SimpleDateFormat("mm:ss.SSS").format(SwoftyParkour.getPlugin().getSql().getTimesForPlayer(player.getUniqueId()).get(parkour)))
+                                        )));
+                    } else {
+                        hologram.addAll(
+                                SUtil.variableize(
+                                        SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getStringList("messages.parkour.holograms.leaderboard-bottom")),
+                                        Arrays.asList(
+                                                Map.entry("$NAME", parkour.getName()),
+                                                Map.entry("$PLAYERTIME", "§cNever completed course")
+                                        )));
+                    }
+
+                    Hologram holo = new Hologram(location, hologram);
+                    holo.show(player);
+                    toHide2.add(holo);
+                });
             }
         });
 

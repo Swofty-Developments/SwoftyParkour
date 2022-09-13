@@ -2,11 +2,13 @@ package net.swofty.parkour.plugin.sql;
 
 import net.swofty.parkour.plugin.SwoftyParkour;
 import net.swofty.parkour.plugin.parkour.Parkour;
+import net.swofty.parkour.plugin.parkour.ParkourRegistry;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SQLDatabase {
     private static final String DATABASE_FILENAME = "database.db";
@@ -71,6 +73,26 @@ public class SQLDatabase {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public Map<Parkour, Long> getTimesForPlayer(UUID uuid) {
+        Map<Parkour, Long> toReturn = new HashMap<>();
+        ParkourRegistry.parkourRegistry.forEach(parkour2 -> {
+            toReturn.put(parkour2, getParkourTime(parkour2, uuid));
+        });
+        return toReturn;
+    }
+
+    public int getPosition(UUID uuid, Parkour parkour) {
+        Map<UUID, Long> map = getParkourTop(parkour);
+
+        for (int x = 0; x < map.size(); x++) {
+            if (new ArrayList<>(map.entrySet()).get(x).getKey().toString().equals(uuid.toString())) {
+                return x + 1;
+            }
+        }
+
+        return 0;
     }
 
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {

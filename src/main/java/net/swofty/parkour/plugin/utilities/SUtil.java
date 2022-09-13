@@ -188,6 +188,31 @@ public class SUtil {
         SUtil.translateColorWords(list).forEach(player::sendMessage);
     }
 
+    /**
+     * Taken from https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
+     */
+    public static HashMap<UUID, Long> sortByValue(HashMap<UUID, Long> hm) {
+        // Create a list from elements of HashMap
+        List<Map.Entry<UUID, Long> > list =
+                new LinkedList<Map.Entry<UUID, Long> >(hm.entrySet());
+
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<UUID, Long> >() {
+            public int compare(Map.Entry<UUID, Long> o1,
+                               Map.Entry<UUID, Long> o2)
+            {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        // put data from sorted list to hashmap
+        HashMap<UUID, Long> temp = new LinkedHashMap<UUID, Long>();
+        for (Map.Entry<UUID, Long> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
+    }
+
     public static List<String> translateColorWords(List<String> s) {
         s.replaceAll(string -> string
                 .replace("%%black%%", "§0")

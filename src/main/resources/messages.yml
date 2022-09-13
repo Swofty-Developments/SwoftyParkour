@@ -104,4 +104,4 @@ messages:
         - "§7Parkour"
       leaderboard-entry: "§7$NUMBER. §e$USERNAME §8- §e$TIME"
       leaderboard-bottom:
-        - "§b$NAME§a's Leaderboard"
+        - "§bYour Time: §e$PLAYERTIME"
