@@ -8,7 +8,7 @@
 
 An advanced configurable 1.16.x Minecraft Plugin meant for making parkours.
 
-[Image of the plugin](https://github.com/Swofty-Developments/SwoftyParkour/blob/master/image.png?raw=true)
+![Image of the plugin](https://github.com/Swofty-Developments/SwoftyParkour/blob/master/image.png?raw=true)
 
 ## Table of contents
 
