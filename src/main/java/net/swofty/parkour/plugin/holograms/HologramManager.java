@@ -61,7 +61,7 @@ public class HologramManager {
                 Location location = parkour.getTop();
                 Map<UUID, Long> sortedLeaderboard = SUtil.sortByValue(new HashMap<>(SwoftyParkour.getPlugin().getSql().getParkourTop(parkour)));
                 ArrayList<String> cached = new ArrayList<>();
-                for (int x = 0; x < 9; x++) {
+                for (int x = 0; x < SwoftyParkour.getPlugin().getConfig().getInt("leaderboard-display-size"); x++) {
                     if (sortedLeaderboard.size() <= x) {
                         cached.add(SUtil.variableize(
                                 SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getString("messages.parkour.holograms.leaderboard-entry")),

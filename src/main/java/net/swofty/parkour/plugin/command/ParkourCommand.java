@@ -88,7 +88,7 @@ public abstract class ParkourCommand implements CommandExecutor, TabCompleter {
 
             parkourCommand.sender = new CommandSource(sender);
 
-            if (!sender.hasPermission(parkourCommand.permission)) {
+            if (!parkourCommand.permission.equals("") && !sender.hasPermission(parkourCommand.permission)) {
                 sender.sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.no-permission")));
                 return false;
             }
