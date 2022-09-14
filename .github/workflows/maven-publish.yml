@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     permissions:
       contents: read
@@ -27,7 +27,7 @@ jobs:
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn dependency:purge-local-repository -U -B package --file pom.xml
       
     - name: Add Jar to GitHub releases
       uses: "marvinpinto/action-automatic-releases@latest"
