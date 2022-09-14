@@ -42,7 +42,7 @@ public class SQLDatabase {
     }
 
     public Long getParkourTime(Parkour parkour, UUID uuid) {
-        Long toReturn;
+        Long toReturn = null;
         try (Connection connection = SwoftyParkour.getPlugin().sql.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `parkour_" + parkour.getName() + "` WHERE uuid=?");
             statement.setString(1, uuid.toString());
@@ -80,6 +80,7 @@ public class SQLDatabase {
         ParkourRegistry.parkourRegistry.forEach(parkour2 -> {
             toReturn.put(parkour2, getParkourTime(parkour2, uuid));
         });
+        if (toReturn.values().stream().allMatch(Objects::isNull)) return null;
         return toReturn;
     }
 

@@ -20,7 +20,6 @@ messages:
   # $NAME - Parkour Name
   # $TIME - Elapsed Time
   # $PREVIOUS_BEST - Previous best time
-  # $POSITION_<PARKOUR NAME> - Current position in leaderboard ranking for a specific parkour
   # $POSITION - Current position in leaderboard ranking for current parkour
   scoreboard:
     - "§e§l Parkour"
@@ -50,6 +49,7 @@ messages:
     name-already-taken: "§cThere is already a parkour named §e$NAME"
     invalid-number-input: "§e$INPUT §cis not a valid number!"
     parkour-not-found: "§cCould not find a parkour named §e$NAME"
+    player-not-found:  "§cCould not find a player named §e$NAME"
     parkour-deleted: "§aDeleted parkour §e$NAME"
     checkpoint-deleted: "§aDeleted checkpoint §e$CHECKPOINT"
     parkour-set-top: "§aSet the leaderboard hologram for §e$NAME"

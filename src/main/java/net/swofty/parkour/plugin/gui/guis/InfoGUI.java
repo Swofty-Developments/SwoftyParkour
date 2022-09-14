@@ -9,12 +9,10 @@ import net.swofty.parkour.plugin.utilities.SUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.awt.*;
 import java.util.List;
 
 public class InfoGUI extends GUI {
@@ -30,7 +28,9 @@ public class InfoGUI extends GUI {
     public InfoGUI(Parkour parkour, String q, int page) {
         super("", 27);
         PaginationList<Location> pagedLocations = new PaginationList<>(5);
-        pagedLocations.addAll(parkour.getCheckpoints());
+        try {
+            pagedLocations.addAll(parkour.getCheckpoints());
+        } catch (Exception e) {}
 
         this.title = "Parkour Information | Page " + page + "/" + pagedLocations.getPageCount();
         this.query = q;
@@ -79,67 +79,71 @@ public class InfoGUI extends GUI {
             }
         });
 
-        if (page != pagedLocations.getPageCount()) {
-            set(new GUIClickableItem() {
-                @Override
-                public void run(InventoryClickEvent e) {
-                    new InfoGUI( parkour, page + 1).open((Player) e.getWhoClicked());
-                }
-
-                @Override
-                public int getSlot() {
-                    return 23;
-                }
-
-                @Override
-                public ItemStack getItem() {
-                    return SUtil.createNamedItemStack(Material.ARROW, ChatColor.GRAY + "->");
-                }
-            });
-        }
-        if (page > 1) {
-            set(new GUIClickableItem() {
-                @Override
-                public void run(InventoryClickEvent e) {
-                    new InfoGUI( parkour, page - 1).open((Player) e.getWhoClicked());
-                }
-
-                @Override
-                public int getSlot() {
-                    return 21;
-                }
-
-                @Override
-                public ItemStack getItem() {
-                    return SUtil.createNamedItemStack(Material.ARROW, ChatColor.GRAY + "<-");
-                }
-            });
-        }
-
         set(GUIClickableItem.getCloseItem(22));
 
-        List<Location> loc = pagedLocations.getPage(page);
-        for (int i = 0; i < loc.size(); i++) {
-            int slot = INTERIOR[i];
-            Location mainLocation = loc.get(i);
-            int finalI = i;
-            set(new GUIClickableItem() {
-                @Override
-                public void run(InventoryClickEvent e) {
-                    Player player = (Player) e.getWhoClicked();
-                    player.performCommand("parkour teleport " + parkour.getName() + " " + (((page - 1) * pagedLocations.getElementsPerPage()) + finalI + 1));
-                }
+        try {
+            List<Location> loc = pagedLocations.getPage(page);
+            for (int i = 0; i < loc.size(); i++) {
+                int slot = INTERIOR[i];
+                Location mainLocation = loc.get(i);
+                int finalI = i;
+                set(new GUIClickableItem() {
+                    @Override
+                    public void run(InventoryClickEvent e) {
+                        Player player = (Player) e.getWhoClicked();
+                        player.performCommand("parkour teleport " + parkour.getName() + " " + (((page - 1) * pagedLocations.getElementsPerPage()) + finalI + 1));
+                    }
 
-                @Override
-                public int getSlot() {
-                    return slot;
-                }
+                    @Override
+                    public int getSlot() {
+                        return slot;
+                    }
 
-                @Override
-                public ItemStack getItem() {
-                     return SUtil.getStack("§aCheckpoint #" + (((page - 1) * pagedLocations.getElementsPerPage()) + finalI + 1), Material.LIGHT_WEIGHTED_PRESSURE_PLATE, (short) 0, 1, "§fX: " + mainLocation.getBlockX() + " Y: " + mainLocation.getBlockY() + " Z: " + mainLocation.getBlockZ(), "§e ", "§eClick to teleport");
-                }
-            });
+                    @Override
+                    public ItemStack getItem() {
+                        return SUtil.getStack("§aCheckpoint #" + (((page - 1) * pagedLocations.getElementsPerPage()) + finalI + 1), Material.LIGHT_WEIGHTED_PRESSURE_PLATE, (short) 0, 1, "§fX: " + mainLocation.getBlockX() + " Y: " + mainLocation.getBlockY() + " Z: " + mainLocation.getBlockZ(), "§e ", "§eClick to teleport");
+                    }
+                });
+            }
+
+            if (page != pagedLocations.getPageCount()) {
+                set(new GUIClickableItem() {
+                    @Override
+                    public void run(InventoryClickEvent e) {
+                        new InfoGUI(parkour, page + 1).open((Player) e.getWhoClicked());
+                    }
+
+                    @Override
+                    public int getSlot() {
+                        return 23;
+                    }
+
+                    @Override
+                    public ItemStack getItem() {
+                        return SUtil.createNamedItemStack(Material.ARROW, ChatColor.GRAY + "->");
+                    }
+                });
+            }
+            if (page > 1) {
+                set(new GUIClickableItem() {
+                    @Override
+                    public void run(InventoryClickEvent e) {
+                        new InfoGUI(parkour, page - 1).open((Player) e.getWhoClicked());
+                    }
+
+                    @Override
+                    public int getSlot() {
+                        return 21;
+                    }
+
+                    @Override
+                    public ItemStack getItem() {
+                        return SUtil.createNamedItemStack(Material.ARROW, ChatColor.GRAY + "<-");
+                    }
+                });
+            }
+        } catch (Exception e) {
+            fill(SUtil.createNamedItemStack(Material.RED_WOOL, "§cNo Checkpoints"), 11, 15);
         }
     }
 
