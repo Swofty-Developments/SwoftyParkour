@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 public class subCommand_stats extends ParkourCommand implements CommandCooldown {
 
     @Override
-    public void run(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args, SwoftyParkour plugin) {
         if (args.length < 2) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour stats <ign>"))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour stats <ign>"))));
             return;
         }
 
@@ -38,12 +38,12 @@ public class subCommand_stats extends ParkourCommand implements CommandCooldown 
             player = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
         }
 
-        if (SwoftyParkour.getPlugin().getSql().getTimesForPlayer(player) == null && Bukkit.getPlayer(args[1]) == null) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.player-not-found")), Arrays.asList(Map.entry("$NAME", args[1]))));
+        if (plugin.getSql().getTimesForPlayer(player, plugin) == null && Bukkit.getPlayer(args[1]) == null) {
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.player-not-found")), Arrays.asList(Map.entry("$NAME", args[1]))));
             return;
         }
 
-        new StatsGUI(player).open(sender.getPlayer());
+        new StatsGUI(player, plugin).open(sender.getPlayer());
     }
 
     @Override

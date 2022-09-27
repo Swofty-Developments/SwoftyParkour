@@ -1,5 +1,6 @@
 package net.swofty.parkour.plugin.command.subtypes;
 
+import net.swofty.parkour.plugin.SwoftyParkour;
 import net.swofty.parkour.plugin.command.CommandCooldown;
 import net.swofty.parkour.plugin.command.CommandParameters;
 import net.swofty.parkour.plugin.command.CommandSource;
@@ -13,7 +14,7 @@ import java.util.List;
 public class subCommand_debug extends ParkourCommand implements CommandCooldown {
 
     @Override
-    public void run(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args, SwoftyParkour plugin) {
         System.out.println("Registry;");
         ParkourRegistry.parkourRegistry.forEach(parkour -> {
             System.out.println(parkour.serialize());

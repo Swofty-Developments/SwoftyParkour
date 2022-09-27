@@ -29,8 +29,8 @@ public class StatsGUI extends GUI {
             10, 11, 12, 13, 14, 15, 16
     };
 
-    public StatsGUI(UUID player, String q, int page) {
-        super("", 27);
+    public StatsGUI(UUID player, String q, int page, SwoftyParkour plugin) {
+        super("", 27, plugin);
         PaginationList<Parkour> pagedParkours = new PaginationList<>(5);
         pagedParkours.addAll(ParkourRegistry.parkourRegistry);
 
@@ -56,7 +56,7 @@ public class StatsGUI extends GUI {
             set(new GUIClickableItem() {
                 @Override
                 public void run(InventoryClickEvent e) {
-                    new StatsGUI(player, page + 1).open((Player) e.getWhoClicked());
+                    new StatsGUI(player, page + 1, plugin).open((Player) e.getWhoClicked());
                 }
 
                 @Override
@@ -74,7 +74,7 @@ public class StatsGUI extends GUI {
             set(new GUIClickableItem() {
                 @Override
                 public void run(InventoryClickEvent e) {
-                    new StatsGUI(player, page - 1).open((Player) e.getWhoClicked());
+                    new StatsGUI(player, page - 1, plugin).open((Player) e.getWhoClicked());
                 }
 
                 @Override
@@ -111,8 +111,8 @@ public class StatsGUI extends GUI {
                 public ItemStack getItem() {
                     return SUtil.getStack("§aParkour §e" + mainParkour.getName(), Material.ENDER_PEARL, (short) 0, 1, "§fX: " + mainParkour.getStartLocation().getBlockX() + " Y: " + mainParkour.getStartLocation().getBlockY() + " Z: " + mainParkour.getStartLocation().getBlockZ(),
                             "§e ",
-                            "§fTime: §7" + (!SwoftyParkour.getPlugin().getSql().getParkourTop(mainParkour).containsKey(player) ?
-                                            "§cHas not finished the course" : new SimpleDateFormat("mm:ss.SSS").format(SwoftyParkour.getPlugin().getSql().getParkourTop(mainParkour).get(player))),
+                            "§fTime: §7" + (!plugin.getSql().getParkourTop(mainParkour, plugin).containsKey(player) ?
+                                            "§cHas not finished the course" : new SimpleDateFormat("mm:ss.SSS").format(plugin.getSql().getParkourTop(mainParkour, plugin).get(player))),
                             "§e ",
                             "§eClick for more information");
                 }
@@ -120,16 +120,16 @@ public class StatsGUI extends GUI {
         }
     }
 
-    public StatsGUI(UUID player, String query) {
-        this(player, query, 1);
+    public StatsGUI(UUID player, String query, SwoftyParkour plugin) {
+        this(player, query, 1, plugin);
     }
 
-    public StatsGUI(UUID player, int page) {
-        this(player, "", page);
+    public StatsGUI(UUID player, int page, SwoftyParkour plugin) {
+        this(player, "", page, plugin);
     }
 
-    public StatsGUI(UUID player) {
-        this(player, 1);
+    public StatsGUI(UUID player, SwoftyParkour plugin) {
+        this(player, 1, plugin);
     }
 
     @Override

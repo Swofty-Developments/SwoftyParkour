@@ -22,16 +22,16 @@ import java.util.stream.Collectors;
 public class subCommand_delete extends ParkourCommand implements CommandCooldown {
 
     @Override
-    public void run(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args, SwoftyParkour plugin) {
         if (args.length < 2) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour delete <parkour> [checkpoint]"))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour delete <parkour> [checkpoint]"))));
             return;
         }
 
         String name = args[1];
 
         if (ParkourRegistry.getFromName(name) == null) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
             return;
         }
 
@@ -42,11 +42,11 @@ public class subCommand_delete extends ParkourCommand implements CommandCooldown
             parkour.getCheckpoints().forEach(loc -> loc.getWorld().getBlockAt(loc).setType(Material.AIR));
 
             ParkourRegistry.parkourRegistry.remove(parkour);
-            ParkourRegistry.removeParkour(parkour.getName(), SwoftyParkour.getPlugin().getParkours());
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.parkour-deleted")), Arrays.asList(Map.entry("$NAME", name))));
+            ParkourRegistry.removeParkour(parkour.getName(), plugin.getParkours());
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.parkour-deleted")), Arrays.asList(Map.entry("$NAME", name))));
 
             try {
-                SwoftyParkour.getPlugin().getSql().getConnection().prepareStatement("DROP TABLE `parkour_" + parkour.getName() + "`").execute();
+                plugin.getSql().getConnection().prepareStatement("DROP TABLE `parkour_" + parkour.getName() + "`").execute();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -57,7 +57,7 @@ public class subCommand_delete extends ParkourCommand implements CommandCooldown
                 Integer checkpointNumber = Integer.parseInt(checkpoint);
 
                 if (checkpointNumber > parkour.getCheckpoints().size() || checkpointNumber < 1) {
-                    send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));
+                    send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));
                 } else {
                     List<Location> checkpoints = parkour.getCheckpoints();
                     parkour.getCheckpoints().get(checkpointNumber - 1).getWorld().getBlockAt(parkour.getCheckpoints().get(checkpointNumber - 1)).setType(Material.AIR);
@@ -65,11 +65,11 @@ public class subCommand_delete extends ParkourCommand implements CommandCooldown
                     parkour.setCheckpoints(checkpoints);
 
                     ParkourRegistry.updateParkour(parkour.getName(), parkour);
-                    ParkourRegistry.saveParkour(parkour, SwoftyParkour.getPlugin().getParkours());
-                    send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.checkpoint-deleted")), Arrays.asList(Map.entry("$CHECKPOINT", checkpoint))));
+                    ParkourRegistry.saveParkour(parkour, plugin.getParkours());
+                    send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.checkpoint-deleted")), Arrays.asList(Map.entry("$CHECKPOINT", checkpoint))));
                 }
             } else {
-                send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));
+                send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));
             }
         }
     }

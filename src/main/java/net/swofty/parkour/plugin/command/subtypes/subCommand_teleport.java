@@ -23,21 +23,21 @@ import java.util.stream.Collectors;
 public class subCommand_teleport extends ParkourCommand implements CommandCooldown {
 
     @Override
-    public void run(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args, SwoftyParkour plugin) {
         if (args.length < 2) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour teleport <parkour> [checkpoint]"))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour teleport <parkour> [checkpoint]"))));
             return;
         }
 
         String name = args[1];
 
         if (ParkourRegistry.getFromName(name) == null) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
             return;
         }
 
         if (ParkourRegistry.playerParkourCache.containsKey(sender.getPlayer().getUniqueId())) {
-            sender.getPlayer().sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getString("messages.parkour.flew-during-course")));
+            sender.getPlayer().sendMessage(SUtil.translateColorWords(plugin.getMessages().getString("messages.parkour.flew-during-course")));
             ParkourRegistry.playerParkourCache.remove(sender.getPlayer().getUniqueId());
             sender.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
@@ -52,12 +52,12 @@ public class subCommand_teleport extends ParkourCommand implements CommandCooldo
                 Integer checkpointNumber = Integer.parseInt(checkpoint);
 
                 if (checkpointNumber > parkour.getCheckpoints().size() || checkpointNumber < 1) {
-                    send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));
+                    send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));
                 } else {
                     sender.getPlayer().teleport(parkour.getCheckpoints().get(checkpointNumber - 1));
                 }
             } else {
-                send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));
+                send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.invalid-number-input")), Arrays.asList(Map.entry("$INPUT", checkpoint))));
             }
         }
     }

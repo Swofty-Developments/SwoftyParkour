@@ -27,15 +27,17 @@ public abstract class GUI {
     protected int size;
     @Getter
     protected List<GUIItem> items;
+    @Getter
+    protected SwoftyParkour plugin;
 
-    public GUI(String title, int size) {
+    public GUI(String title, int size, SwoftyParkour plugin) {
         this.title = title;
         this.size = size;
         this.items = new ArrayList<>();
     }
 
-    public GUI(String title) {
-        this(title, 27);
+    public GUI(String title, SwoftyParkour plugin) {
+        this(title, 27, plugin);
     }
 
     public void set(GUIItem a) {
@@ -169,7 +171,7 @@ public abstract class GUI {
         early(player);
         Inventory inventory = Bukkit.createInventory(player, size, title);
         GUIOpenEvent openEvent = new GUIOpenEvent(player, this, inventory);
-        SwoftyParkour.getPlugin().getServer().getPluginManager().callEvent(openEvent);
+        plugin.getServer().getPluginManager().callEvent(openEvent);
         if (openEvent.isCancelled())
             return;
         setItems();
@@ -180,7 +182,6 @@ public abstract class GUI {
         GUI_MAP.remove(player.getUniqueId());
         GUI_MAP.put(player.getUniqueId(), this);
         afterOpen(openEvent);
-        SUtil.runAsync(() -> afterOpenAsync(openEvent));
     }
 
     // to be overridden if necessary

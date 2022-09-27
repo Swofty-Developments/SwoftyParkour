@@ -23,8 +23,8 @@ public class SUtil {
 
     public static HashMap<String, net.md_5.bungee.api.ChatColor> cachedHexColors = new HashMap<>();
 
-    public static void setCachedHexColors() {
-        Config config = SwoftyParkour.getPlugin().getMessages();
+    public static void setCachedHexColors(SwoftyParkour plugin) {
+        Config config = plugin.getMessages();
 
         config.getConfigurationSection("hex-colors").getKeys(true).forEach(key -> {
             cachedHexColors.put("$" + key, net.md_5.bungee.api.ChatColor.of(config.getConfigurationSection("hex-colors").getString(key)));
@@ -44,10 +44,6 @@ public class SUtil {
         sk1.setOwningPlayer(Bukkit.getOfflinePlayer(playerName));
         skull1.setItemMeta(sk1);
         return stack;
-    }
-
-    public static StackResult getStack(Material material, int varaint) {
-        return new StackResult(material, varaint);
     }
 
     public static ItemStack getStack(String name, Material material, short data, int amount, String... lore) {
@@ -85,14 +81,6 @@ public class SUtil {
         return stack;
     }
 
-    public static void delay(Runnable runnable, long delay) {
-        new BukkitRunnable() {
-            public void run() {
-                runnable.run();
-            }
-        }.runTaskLater(SwoftyParkour.getPlugin(), delay);
-    }
-
     public static ItemStack getSkullStack(String name, String skullName, int amount, String... lore) {
         ItemStack stack = getStack(name, Material.PLAYER_HEAD, (short) 3, amount, lore);
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
@@ -109,19 +97,6 @@ public class SUtil {
             stack.setItemMeta(meta);
         }
         return stack;
-    }
-
-    public static void runBukkitAsync(Runnable runnable) {
-        Bukkit.getScheduler().runTaskAsynchronously(SwoftyParkour.getPlugin(), runnable);
-    }
-
-    public static void runAsync(Runnable runnable) {
-        new Thread(runnable).start();
-//            Bukkit.getScheduler().runTaskAsynchronously(SkyBlock.getPlugin(), runnable);
-    }
-
-    public static void runSync(Runnable runnable) {
-        Bukkit.getScheduler().runTask(SwoftyParkour.getPlugin(), runnable);
     }
 
     public static ItemStack getSingleLoreStack(String name, Material material, short data, int amount, String lore) {
@@ -147,22 +122,22 @@ public class SUtil {
         return list;
     }
 
-    public static Material getPlate(PlateType plateType) {
+    public static Material getPlate(PlateType plateType, SwoftyParkour plugin) {
         switch (plateType) {
             case START:
-                if (SwoftyParkour.getPlugin().getConfig().getString("pressure-plate-types.start").equals("GOLD")) {
+                if (plugin.getConfig().getString("pressure-plate-types.start").equals("GOLD")) {
                     return Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
                 } else {
                     return Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
                 }
             case CHECKPOINT:
-                if (SwoftyParkour.getPlugin().getConfig().getString("pressure-plate-types.checkpoint").equals("GOLD")) {
+                if (plugin.getConfig().getString("pressure-plate-types.checkpoint").equals("GOLD")) {
                     return Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
                 } else {
                     return Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
                 }
             case END:
-                if (SwoftyParkour.getPlugin().getConfig().getString("pressure-plate-types.end").equals("GOLD")) {
+                if (plugin.getConfig().getString("pressure-plate-types.end").equals("GOLD")) {
                     return Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
                 } else {
                     return Material.HEAVY_WEIGHTED_PRESSURE_PLATE;

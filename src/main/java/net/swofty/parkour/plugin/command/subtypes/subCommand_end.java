@@ -24,16 +24,16 @@ public class subCommand_end extends ParkourCommand implements CommandCooldown {
 
     @SneakyThrows
     @Override
-    public void run(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args, SwoftyParkour plugin) {
         if (args.length == 1) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour end <parkour>"))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour end <parkour>"))));
             return;
         }
 
         String name = args[1];
 
         if (ParkourRegistry.getFromName(name) == null) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
             return;
         }
 
@@ -48,17 +48,17 @@ public class subCommand_end extends ParkourCommand implements CommandCooldown {
         parkour.setEndLocation(loc);
         parkour.setFinished(true);
         ParkourRegistry.updateParkour(name, parkour);
-        ParkourRegistry.saveParkour(parkour, SwoftyParkour.getPlugin().parkours);
+        ParkourRegistry.saveParkour(parkour, plugin.parkours);
 
-        loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.END));
+        loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.END, plugin));
 
-        SwoftyParkour.getPlugin().getSql().getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `parkour_" + parkour.getName() + "` (\n" +
+        plugin.getSql().getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `parkour_" + parkour.getName() + "` (\n" +
                 "\t`uuid` TEXT,\n" +
                 "\t`time` INT(64)\n" +
                 ");").execute();
 
         send(SUtil.variableize(
-                SwoftyParkour.getPlugin().messages.getStringList("messages.command.end-placed"),
+                plugin.messages.getStringList("messages.command.end-placed"),
                 Arrays.asList(Map.entry("$NAME", name)))
         );
     }

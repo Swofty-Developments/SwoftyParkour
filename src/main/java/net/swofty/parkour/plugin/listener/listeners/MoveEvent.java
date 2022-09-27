@@ -13,7 +13,7 @@ public class MoveEvent extends PListener {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (event.getPlayer().isFlying() && ParkourRegistry.playerParkourCache.containsKey(event.getPlayer().getUniqueId())) {
-            event.getPlayer().sendMessage(SUtil.translateColorWords(SwoftyParkour.getPlugin().getMessages().getString("messages.parkour.flew-during-course")));
+            event.getPlayer().sendMessage(SUtil.translateColorWords(getPlugin().getMessages().getString("messages.parkour.flew-during-course")));
             ParkourRegistry.playerParkourCache.remove(event.getPlayer().getUniqueId());
             event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }

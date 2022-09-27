@@ -24,9 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class SwoftyParkour extends JavaPlugin {
 
-    @Getter
-    private static SwoftyParkour plugin;
-    public CommandLoader cl;
+    public CommandLoader commandLoader;
     public CommandMap commandMap;
     @Getter
     public Config messages;
@@ -41,8 +39,6 @@ public final class SwoftyParkour extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        plugin = this;
-
         // Handle commands
         try {
             Field f = Bukkit.getServer().getClass().getDeclaredField("commandMap");
@@ -52,14 +48,17 @@ public final class SwoftyParkour extends JavaPlugin {
             e.printStackTrace();
         }
 
-        cl = new CommandLoader();
-        loadCommands();
+        commandLoader = new CommandLoader();
+        loadCommands(this);
 
+        SwoftyParkour plugin = this;
         // Handle holograms
         new BukkitRunnable() {
             @Override
             public void run() {
-                Bukkit.getOnlinePlayers().forEach(Hologram::handleRefreshment);
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    Hologram.handleRefreshment(player, plugin);
+                });
             }
         }.runTaskTimer(this, 0, 20);
 
@@ -67,10 +66,10 @@ public final class SwoftyParkour extends JavaPlugin {
         loadListeners();
 
         // Handle config
-        messages = new Config("messages.yml");
-        config = new Config("config.yml");
-        parkours = new Config("parkours.yml");
-        SUtil.setCachedHexColors();
+        messages = new Config("messages.yml", this);
+        config = new Config("config.yml", this);
+        parkours = new Config("parkours.yml", this);
+        SUtil.setCachedHexColors(this);
 
         // Handle SQL
         sql = new SQLDatabase();
@@ -80,17 +79,16 @@ public final class SwoftyParkour extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                HologramManager.runHologramLoop();
+                HologramManager.runHologramLoop(plugin);
             }
         }.runTaskTimer(this, 10, 10);
         replacePlates();
-        repeater = new Repeater();
+        repeater = new Repeater(this);
     }
 
     @Override
     public void onDisable() {
         repeater.stop();
-        plugin = null;
     }
 
     private void loadListeners() {
@@ -98,20 +96,21 @@ public final class SwoftyParkour extends JavaPlugin {
         for(Class<? extends PListener> l:reflection.getSubTypesOf(PListener.class)) {
             try {
                 PListener clazz = l.newInstance();
+                clazz.setPlugin(this);
             } catch (InstantiationException | IllegalAccessException ex) {
                 ex.printStackTrace();
             }
         }
     }
 
-    private void loadCommands() {
-        ParkourCommand.register();
+    private void loadCommands(SwoftyParkour plugin) {
+        ParkourCommand.register(plugin);
 
         Reflections reflection = new Reflections("net.swofty.parkour.plugin.command.subtypes");
         for(Class<? extends ParkourCommand> l:reflection.getSubTypesOf(ParkourCommand.class)) {
             try {
                 ParkourCommand command = l.newInstance();
-                cl.register(command);
+                commandLoader.register(command);
             } catch (InstantiationException | IllegalAccessException ex) {
                 ex.printStackTrace();
             }
@@ -122,17 +121,17 @@ public final class SwoftyParkour extends JavaPlugin {
         ParkourRegistry.getParkourRegistry().forEach(parkour -> {
             if (parkour.getStartLocation() != null) {
                 Location loc = parkour.getStartLocation();
-                loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.START));
+                loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.START, this));
             }
             if (parkour.getCheckpoints() != null) {
                 parkour.getCheckpoints().forEach(location -> {
                     Location loc = location;
-                    loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.CHECKPOINT));
+                    loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.CHECKPOINT, this));
                 });
             }
             if (parkour.getEndLocation() != null) {
                 Location loc = parkour.getEndLocation();
-                loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.END));
+                loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.END, this));
             }
         });
     }

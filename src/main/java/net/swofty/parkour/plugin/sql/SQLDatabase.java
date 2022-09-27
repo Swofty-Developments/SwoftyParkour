@@ -41,9 +41,9 @@ public class SQLDatabase {
         return null;
     }
 
-    public Long getParkourTime(Parkour parkour, UUID uuid) {
+    public Long getParkourTime(Parkour parkour, UUID uuid, SwoftyParkour plugin) {
         Long toReturn = null;
-        try (Connection connection = SwoftyParkour.getPlugin().sql.getConnection()) {
+        try (Connection connection = plugin.sql.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `parkour_" + parkour.getName() + "` WHERE uuid=?");
             statement.setString(1, uuid.toString());
             ResultSet set = statement.executeQuery();
@@ -57,8 +57,8 @@ public class SQLDatabase {
         return toReturn;
     }
 
-    public Map<UUID, Long> getParkourTop(Parkour parkour) {
-        try (Connection connection = SwoftyParkour.getPlugin().sql.getConnection()) {
+    public Map<UUID, Long> getParkourTop(Parkour parkour, SwoftyParkour plugin) {
+        try (Connection connection = plugin.sql.getConnection()) {
             HashMap<UUID, Long> map = new HashMap();
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `parkour_" + parkour.getName() + "`");
@@ -75,17 +75,17 @@ public class SQLDatabase {
         return null;
     }
 
-    public Map<Parkour, Long> getTimesForPlayer(UUID uuid) {
+    public Map<Parkour, Long> getTimesForPlayer(UUID uuid, SwoftyParkour plugin) {
         Map<Parkour, Long> toReturn = new HashMap<>();
         ParkourRegistry.parkourRegistry.forEach(parkour2 -> {
-            toReturn.put(parkour2, getParkourTime(parkour2, uuid));
+            toReturn.put(parkour2, getParkourTime(parkour2, uuid, plugin));
         });
         if (toReturn.values().stream().allMatch(Objects::isNull)) return null;
         return toReturn;
     }
 
-    public int getPosition(UUID uuid, Parkour parkour) {
-        Map<UUID, Long> map = getParkourTop(parkour);
+    public int getPosition(UUID uuid, Parkour parkour, SwoftyParkour plugin) {
+        Map<UUID, Long> map = getParkourTop(parkour, plugin);
 
         for (int x = 0; x < map.size(); x++) {
             if (new ArrayList<>(map.entrySet()).get(x).getKey().toString().equals(uuid.toString())) {

@@ -40,40 +40,7 @@ public class ReflectionHelper {
     }
 
     public static void sendPacket(Packet<?> packet, Player player) {
-        sendPacket(packet, player, false);
-    }
-
-    public static void sendPacket(Packet<?> packet, Player player, boolean async) {
-        if (async)
-            SUtil.runAsync(() -> ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet));
-        else
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-    }
-
-    public static void sendPacket(Packet<?> packet) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            sendPacket(packet, player);
-        }
-    }
-
-    public static void sendPacket(Packet<?> packet, boolean async) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            sendPacket(packet, player, async);
-        }
-    }
-
-    public static void sendPacket(Packet<?> packet, Location origin, int distance) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getLocation().distance(origin) <= distance)
-                sendPacket(packet, player);
-        }
-    }
-
-    public static void sendPacket(Packet<?> packet, Location origin, int distance, boolean async) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getLocation().distance(origin) <= distance)
-                sendPacket(packet, player, async);
-        }
     }
 
     /**

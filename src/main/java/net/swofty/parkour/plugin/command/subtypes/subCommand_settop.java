@@ -22,24 +22,24 @@ import java.util.stream.Collectors;
 public class subCommand_settop extends ParkourCommand implements CommandCooldown {
 
     @Override
-    public void run(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args, SwoftyParkour plugin) {
         if (args.length < 2) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour settop <parkour>"))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour settop <parkour>"))));
             return;
         }
 
         String name = args[1];
 
         if (ParkourRegistry.getFromName(name) == null) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
             return;
         }
 
         Parkour parkour = ParkourRegistry.getFromName(name);
         parkour.setTop(sender.getPlayer().getLocation());
         ParkourRegistry.updateParkour(parkour.getName(), parkour);
-        ParkourRegistry.saveParkour(parkour, SwoftyParkour.getPlugin().getParkours());
-        send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.parkour-set-top")), Arrays.asList(Map.entry("$NAME", name))));
+        ParkourRegistry.saveParkour(parkour, plugin.getParkours());
+        send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.parkour-set-top")), Arrays.asList(Map.entry("$NAME", name))));
     }
 
     @Override

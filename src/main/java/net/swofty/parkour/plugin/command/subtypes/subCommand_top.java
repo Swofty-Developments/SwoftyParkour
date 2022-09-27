@@ -21,20 +21,20 @@ import java.util.stream.Collectors;
 public class subCommand_top extends ParkourCommand implements CommandCooldown {
 
     @Override
-    public void run(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args, SwoftyParkour plugin) {
         if (args.length < 2) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour top <parkour>"))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour top <parkour>"))));
             return;
         }
 
         String name = args[1];
 
         if (ParkourRegistry.getFromName(name) == null) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.parkour-not-found")), Arrays.asList(Map.entry("$NAME", name))));
             return;
         }
 
-        new TopGUI(ParkourRegistry.getFromName(name)).open(sender.getPlayer());
+        new TopGUI(ParkourRegistry.getFromName(name), plugin).open(sender.getPlayer());
     }
 
     @Override

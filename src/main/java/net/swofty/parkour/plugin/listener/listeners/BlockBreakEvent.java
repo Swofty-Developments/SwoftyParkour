@@ -1,5 +1,6 @@
 package net.swofty.parkour.plugin.listener.listeners;
 
+import net.swofty.parkour.plugin.SwoftyParkour;
 import net.swofty.parkour.plugin.listener.PListener;
 import net.swofty.parkour.plugin.parkour.ParkourRegistry;
 import org.bukkit.event.EventHandler;

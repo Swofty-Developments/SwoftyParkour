@@ -6,11 +6,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 
 public class Config extends YamlConfiguration {
-    private final SwoftyParkour plugin;
     private final File file;
 
-    public Config(File parent, String name) {
-        this.plugin = SwoftyParkour.getPlugin();
+    public Config(File parent, String name, SwoftyParkour plugin) {
         this.file = new File(parent, name);
 
         if (!file.exists()) {
@@ -20,8 +18,8 @@ public class Config extends YamlConfiguration {
         load();
     }
 
-    public Config(String name) {
-        this(SwoftyParkour.getPlugin().getDataFolder(), name);
+    public Config(String name, SwoftyParkour plugin) {
+        this(plugin.getDataFolder(), name, plugin);
     }
 
     public void load() {

@@ -1,6 +1,7 @@
 package net.swofty.parkour.plugin.listener.listeners;
 
 import lombok.SneakyThrows;
+import net.swofty.parkour.plugin.SwoftyParkour;
 import net.swofty.parkour.plugin.gui.GUI;
 import net.swofty.parkour.plugin.gui.events.GUIOpenEvent;
 import net.swofty.parkour.plugin.gui.guiitem.GUIChatQueryItem;

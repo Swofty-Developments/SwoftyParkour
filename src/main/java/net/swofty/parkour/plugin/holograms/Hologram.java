@@ -17,13 +17,12 @@ import java.util.*;
 @Getter
 public class Hologram {
 
-    public static final double DELTA = SwoftyParkour.getPlugin().getConfig().getDouble("hologram-split-size");
-
     public static final Map<UUID, HashMap<String, Hologram>> HOLO_MAP = new HashMap<>();
     public static final Map<String, Hologram> HOLOGRAM_CACHE = new HashMap<>();
     public static final Multimap<UUID, String> IN_SIGHT = ArrayListMultimap.create();
     public static final Multimap<UUID, String> HOLOGRAMS = ArrayListMultimap.create();
 
+    private double DELTA = 0;
     private final List<Object> armorStands = new ArrayList<>();
     private final List<Packet<PacketListenerPlayOut>> showPackets = new ArrayList<>();
     private final List<Packet<PacketListenerPlayOut>> showPackets2 = new ArrayList<>();
@@ -39,14 +38,15 @@ public class Hologram {
     private List<String> text;
     public List<Object> updatePackets = null;
 
-    public Hologram(Location location, List<String> text) {
-        this(UUID.randomUUID().toString(), location, text);
+    public Hologram(Location location, List<String> text, SwoftyParkour plugin) {
+        this(UUID.randomUUID().toString(), location, text, plugin);
     }
 
-    public Hologram(String name, Location location, List<String> text) {
+    public Hologram(String name, Location location, List<String> text, SwoftyParkour plugin) {
         this.name = name;
         this.location = location;
         this.text = text;
+        this.DELTA = plugin.getConfig().getDouble("hologram-split-size");
 
         worldServer = ((CraftWorld) location.getWorld()).getHandle();
 
@@ -109,7 +109,7 @@ public class Hologram {
         hide(player, false);
     }
 
-    public static void handleRefreshment(Player player) {
+    public static void handleRefreshment(Player player, SwoftyParkour plugin) {
         ArrayList<String> supposedToView = new ArrayList<>(HOLOGRAMS.get(player.getUniqueId()));
         for (String name : supposedToView) {
             if (name.contains("lb")) continue;
@@ -130,7 +130,7 @@ public class Hologram {
                     public void run() {
                         hologram.show(player, false);
                     }
-                }.runTaskLater(SwoftyParkour.getPlugin(), 3);
+                }.runTaskLater(plugin, 3);
                 IN_SIGHT.put(player.getUniqueId(), name);
             }
         }

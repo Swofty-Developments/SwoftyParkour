@@ -9,25 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
+@Setter
 public class Parkour implements ConfigurationSerializable {
 
-    @Getter
-    @Setter
     public String name;
-    @Getter
-    @Setter
     public Location startLocation;
-    @Getter
-    @Setter
     public Location endLocation;
-    @Getter
-    @Setter
     public List<Location> checkpoints;
-    @Getter
-    @Setter
     public Boolean finished;
-    @Getter
-    @Setter
     public Location top;
 
     public Parkour() {

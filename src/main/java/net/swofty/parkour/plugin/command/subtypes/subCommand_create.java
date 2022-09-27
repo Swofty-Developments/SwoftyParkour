@@ -21,16 +21,16 @@ import java.util.Map;
 public class subCommand_create extends ParkourCommand implements CommandCooldown {
 
     @Override
-    public void run(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args, SwoftyParkour plugin) {
         if (args.length == 1) {
-            send(SUtil.variableize(SUtil.translateColorWords(SwoftyParkour.getPlugin().messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour create <name>"))));
+            send(SUtil.variableize(SUtil.translateColorWords(plugin.messages.getString("messages.command.usage-command")), Arrays.asList(Map.entry("$USAGE", "/parkour create <name>"))));
             return;
         }
 
         String name = args[1];
 
         if (ParkourRegistry.getFromName(name) != null) {
-            send(SUtil.variableize(SwoftyParkour.getPlugin().messages.getString("messages.command.name-already-taken"), Arrays.asList(Map.entry("$NAME", name))));
+            send(SUtil.variableize(plugin.messages.getString("messages.command.name-already-taken"), Arrays.asList(Map.entry("$NAME", name))));
             return;
         }
 
@@ -41,12 +41,12 @@ public class subCommand_create extends ParkourCommand implements CommandCooldown
         parkour.setStartLocation(loc);
         parkour.setName(name);
 
-        loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.START));
+        loc.getWorld().getBlockAt(loc).setType(SUtil.getPlate(SUtil.PlateType.START, plugin));
 
         ParkourRegistry.parkourRegistry.add(parkour);
-        ParkourRegistry.saveParkour(parkour, SwoftyParkour.getPlugin().parkours);
+        ParkourRegistry.saveParkour(parkour, plugin.parkours);
 
-        send(SUtil.variableize(SwoftyParkour.getPlugin().messages.getStringList("messages.command.creation-message"), Arrays.asList(Map.entry("$NAME", name))));
+        send(SUtil.variableize(plugin.messages.getStringList("messages.command.creation-message"), Arrays.asList(Map.entry("$NAME", name))));
     }
 
     @Override

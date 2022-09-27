@@ -31,10 +31,10 @@ public class TopGUI extends GUI {
             10, 11, 12, 13, 14, 15, 16
     };
 
-    public TopGUI(Parkour parkour, String q, int page) {
-        super("", 27);
+    public TopGUI(Parkour parkour, String q, int page, SwoftyParkour plugin) {
+        super("", 27, plugin);
         PaginationList<Map.Entry<UUID, Long>> pagedLeaderboard = new PaginationList<>(7);
-        pagedLeaderboard.addAll(SwoftyParkour.getPlugin().getSql().getParkourTop(parkour).entrySet());
+        pagedLeaderboard.addAll(plugin.getSql().getParkourTop(parkour, plugin).entrySet());
 
         this.title = "Parkour Top | Page " + page + "/" + pagedLeaderboard.getPageCount();
         this.query = q;
@@ -58,7 +58,7 @@ public class TopGUI extends GUI {
             set(new GUIClickableItem() {
                 @Override
                 public void run(InventoryClickEvent e) {
-                    new TopGUI(parkour, page + 1).open((Player) e.getWhoClicked());
+                    new TopGUI(parkour, page + 1, plugin).open((Player) e.getWhoClicked());
                 }
 
                 @Override
@@ -76,7 +76,7 @@ public class TopGUI extends GUI {
             set(new GUIClickableItem() {
                 @Override
                 public void run(InventoryClickEvent e) {
-                    new TopGUI(parkour, page - 1).open((Player) e.getWhoClicked());
+                    new TopGUI(parkour, page - 1, plugin).open((Player) e.getWhoClicked());
                 }
 
                 @Override
@@ -112,22 +112,22 @@ public class TopGUI extends GUI {
 
                 @Override
                 public ItemStack getItem() {
-                    return SUtil.getSkullStack("§a#" + (((page - 1) * pagedLeaderboard.getElementsPerPage()) + finalI + 1) + " §8- " + Bukkit.getOfflinePlayer(score.getKey()).getName(), Bukkit.getOfflinePlayer(score.getKey()).getName(), 1, "§7Time: §f" + new SimpleDateFormat("mm:ss.SSS").format(SwoftyParkour.getPlugin().getSql().getTimesForPlayer(score.getKey()).get(parkour)), "§b", "§eClick to view top scores");
+                    return SUtil.getSkullStack("§a#" + (((page - 1) * pagedLeaderboard.getElementsPerPage()) + finalI + 1) + " §8- " + Bukkit.getOfflinePlayer(score.getKey()).getName(), Bukkit.getOfflinePlayer(score.getKey()).getName(), 1, "§7Time: §f" + new SimpleDateFormat("mm:ss.SSS").format(plugin.getSql().getTimesForPlayer(score.getKey(), plugin).get(parkour)), "§b", "§eClick to view top scores");
                 }
             });
         }
     }
 
-    public TopGUI(Parkour parkour, String query) {
-        this(parkour, query, 1);
+    public TopGUI(Parkour parkour, String query, SwoftyParkour plugin) {
+        this(parkour, query, 1, plugin);
     }
 
-    public TopGUI(Parkour parkour, int page) {
-        this(parkour, "", page);
+    public TopGUI(Parkour parkour, int page, SwoftyParkour plugin) {
+        this(parkour, "", page, plugin);
     }
 
-    public TopGUI(Parkour parkour) {
-        this(parkour, 1);
+    public TopGUI(Parkour parkour, SwoftyParkour plugin) {
+        this(parkour, 1, plugin);
     }
 
     @Override

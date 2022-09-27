@@ -12,7 +12,7 @@ public class ParkourRegistry {
     @Getter
     public static ArrayList<Parkour> parkourRegistry = new ArrayList<>();
     @Getter
-    public static HashMap<UUID, Map.Entry<Parkour, Map.Entry<Integer, Long>>> playerParkourCache = new HashMap<>();
+    public static HashMap<UUID, ParkourSession> playerParkourCache = new HashMap<>();
 
     public static void loadFromConfig(Config config) {
         if (!config.contains("parkours")) return;

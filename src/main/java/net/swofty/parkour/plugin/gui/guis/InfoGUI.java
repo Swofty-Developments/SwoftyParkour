@@ -1,5 +1,6 @@
 package net.swofty.parkour.plugin.gui.guis;
 
+import net.swofty.parkour.plugin.SwoftyParkour;
 import net.swofty.parkour.plugin.gui.GUI;
 import net.swofty.parkour.plugin.gui.guiitem.GUIClickableItem;
 import net.swofty.parkour.plugin.gui.guiitem.GUIItem;
@@ -25,8 +26,8 @@ public class InfoGUI extends GUI {
             11, 12, 13, 14, 15,
     };
 
-    public InfoGUI(Parkour parkour, String q, int page) {
-        super("", 27);
+    public InfoGUI(Parkour parkour, String q, int page, SwoftyParkour plugin) {
+        super("", 27, plugin);
         PaginationList<Location> pagedLocations = new PaginationList<>(5);
         try {
             pagedLocations.addAll(parkour.getCheckpoints());
@@ -110,7 +111,7 @@ public class InfoGUI extends GUI {
                 set(new GUIClickableItem() {
                     @Override
                     public void run(InventoryClickEvent e) {
-                        new InfoGUI(parkour, page + 1).open((Player) e.getWhoClicked());
+                        new InfoGUI(parkour, page + 1, plugin).open((Player) e.getWhoClicked());
                     }
 
                     @Override
@@ -128,7 +129,7 @@ public class InfoGUI extends GUI {
                 set(new GUIClickableItem() {
                     @Override
                     public void run(InventoryClickEvent e) {
-                        new InfoGUI(parkour, page - 1).open((Player) e.getWhoClicked());
+                        new InfoGUI(parkour, page - 1, plugin).open((Player) e.getWhoClicked());
                     }
 
                     @Override
@@ -147,16 +148,16 @@ public class InfoGUI extends GUI {
         }
     }
 
-    public InfoGUI(Parkour parkour, String query) {
-        this(parkour, query, 1);
+    public InfoGUI(Parkour parkour, String query, SwoftyParkour plugin) {
+        this(parkour, query, 1, plugin);
     }
 
-    public InfoGUI(Parkour parkour, int page) {
-        this(parkour, "", page);
+    public InfoGUI(Parkour parkour, int page, SwoftyParkour plugin) {
+        this(parkour, "", page, plugin);
     }
 
-    public InfoGUI(Parkour parkour) {
-        this(parkour, 1);
+    public InfoGUI(Parkour parkour, SwoftyParkour plugin) {
+        this(parkour, 1, plugin);
     }
 
     @Override
