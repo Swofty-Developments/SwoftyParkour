@@ -92,11 +92,11 @@ public final class SwoftyParkour extends JavaPlugin {
     }
 
     private void loadListeners() {
+        PListener.setPlugin(this);
         Reflections reflection = new Reflections("net.swofty.parkour.plugin.listener.listeners");
         for(Class<? extends PListener> l:reflection.getSubTypesOf(PListener.class)) {
             try {
                 PListener clazz = l.newInstance();
-                clazz.setPlugin(this);
             } catch (InstantiationException | IllegalAccessException ex) {
                 ex.printStackTrace();
             }

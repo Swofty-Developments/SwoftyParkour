@@ -9,7 +9,7 @@ public class PListener implements Listener {
     private static int amount = 0;
     @Getter
     @Setter
-    public SwoftyParkour plugin;
+    public static SwoftyParkour plugin;
 
     {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
